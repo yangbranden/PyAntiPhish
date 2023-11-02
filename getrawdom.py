@@ -3,6 +3,7 @@
 import requests
 import os
 import csv
+import pandas as pd
 
 # THIS IS TO GATHER THE RAW DATA BECAUSE PHISHING PAGES GET DELETED QUICKLY SO I AM GOING TO SAVE THE FULL DOM
 # DOWNLOAD PHISHTANK DATA: http://data.phishtank.com/data/online-valid.csv
@@ -83,8 +84,11 @@ if __name__ == "__main__":
         reader = csv.reader(f)
         for row in reader:
             url = row[1]
-            # skip header
-            if url == "url":
+            # skip if already in file
+            saved_data = pd.read_csv("raw_htmldom_data.csv")
+            urls_column = saved_data['website_url'].tolist()
+            if url in urls_column:
+                print("URL already found; skipping")
                 continue
             html_dom_path, status = get_html_dom(url)
             if status is True:
