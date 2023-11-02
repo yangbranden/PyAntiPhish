@@ -4,6 +4,5 @@
 ## Collecting HTML DOM data
 ```
 wget http://data.phishtank.com/data/online-valid.csv
-wget https://github.com/yangbranden/BAYPhish/blob/main/getrawdom.py
 python getrawdom.py
 ```
