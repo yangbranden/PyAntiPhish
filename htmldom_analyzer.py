@@ -2,12 +2,8 @@
 
 # Stage 3 - analyze HTML DOM
 # Features extracted from script:
-# X. Presence of <input> and <form> tag; all phishing pages have at least one text input
-# X. Presence of onclick, onload, onchange, onkeydown, onkeyup attributes
-# 1. Ratio of nil anchors (href=“#”) to all anchors (i.e. percentage of nil anchors)
+# 1. Ratio of nil anchors (href="#") to all anchors (i.e. percentage of nil anchors)
 # 2. <head> element
-# 2. "href" attribute (<a>, <area>, <base>, <link>) outside of domain 
-# 3. "src" attribute (<audio>, <embed>, <iframe>, <img>, <input>, <script>, <source>, <track>, <video>) outside of domain
 
 import requests
 import os
@@ -17,17 +13,18 @@ from bs4 import BeautifulSoup
 def input_form_exists(response_content):
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(response_content, 'html.parser') # response.content has the HTML DOM, we use bs4 to parse it
+    print(soup.head)
     
-    input_tags = soup.find_all('input')
-    form_tags = soup.find_all('form')
-    onclick_elements = soup.find_all(attrs={"onclick": True})
-    onload_elements = soup.find_all(attrs={"onload": True})
-    onchange_elements = soup.find_all(attrs={"onchange": True})
-    onkeydown_elements = soup.find_all(attrs={"onkeydown": True})
-    onkeyup_elements = soup.find_all(attrs={"onkeyup": True})
+    # input_tags = soup.find_all('input')
+    # form_tags = soup.find_all('form')
+    # onclick_elements = soup.find_all(attrs={"onclick": True})
+    # onload_elements = soup.find_all(attrs={"onload": True})
+    # onchange_elements = soup.find_all(attrs={"onchange": True})
+    # onkeydown_elements = soup.find_all(attrs={"onkeydown": True})
+    # onkeyup_elements = soup.find_all(attrs={"onkeyup": True})
     
     # print(soup.find_all("form"), soup.find_all("input"))
-    print(len(input_tags), len(form_tags), len(onclick_elements), len(onload_elements), len(onchange_elements), len(onkeydown_elements), len(onkeyup_elements))
+    # print(len(input_tags), len(form_tags), len(onclick_elements), len(onload_elements), len(onchange_elements), len(onkeydown_elements), len(onkeyup_elements))
     
 
 # Use simple GET request for HTML DOM
