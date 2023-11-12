@@ -36,6 +36,9 @@ import pickle
 import numpy as np
 import random
 
+# Define good TLDs to check
+good_tlds = ["com", "org", "net", "edu", "gov", "co", "uk", "eu", "ca", "de", "br", "jp"]
+
 # Feature 1 is length of whole URL; we exclude scheme because too inconsistent
 def get_url_len(url):
     # Ensure urlparse is able to get netloc properly
@@ -94,9 +97,6 @@ def count_char(url, char):
 
 # Feature 21 (Non-standard TLD in standard location)
 def bad_tld(url):
-    # Define good TLDs to check
-    good_tlds = ["com", "org", "net", "edu", "gov", "co", "uk", "eu", "ca", "de", "br", "jp"]
-    
     # Ensure urlparse is able to work properly
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
         url = '//' + url
@@ -116,9 +116,6 @@ def bad_tld(url):
 
 # Feature 22 (Standard TLD in non-standard location)
 def bad_tld_location(url):
-    # Define good TLDs to check
-    good_tlds = ["com", "org", "net", "edu", "gov", "co", "uk", "eu", "ca", "de", "br", "jp"]
-
     # Ensure urlparse is able to work properly
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
         url = '//' + url
