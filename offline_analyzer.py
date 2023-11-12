@@ -81,7 +81,8 @@ good_urls = [
     "https://steamcommunity.com/",
     "https://discord.com/",
     "https://www.roblox.com/",
-    "https://www.homedepot.com/"
+    "https://www.homedepot.com/",
+    "https://www.youtube.com/"
 ]
 
 # Feature 1 is length of whole URL; we exclude scheme because too inconsistent
