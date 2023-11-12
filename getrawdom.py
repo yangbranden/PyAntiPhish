@@ -18,12 +18,6 @@ def get_html_dom(url):
         response = requests.get(url, headers=headers)
         # Check if the request was successful (status code 200)
         if response.status_code == 200:
-            if not os.path.exists("raw_htmldom_data.csv"):
-                # Write header row
-                csv.writer(open("raw_htmldom_data.csv", "w")).writerow([
-                    "website_url", "html_dom_path", "result"
-                ])
-            
             # the name of the saved HTML DOM will be the current length of the CSV file (so the folder & csv file MUST match)
             with open("raw_htmldom_data.csv", "r") as f:
                 index = len(f.readlines())
@@ -84,6 +78,12 @@ if __name__ == "__main__":
         reader = csv.reader(f)
         for row in reader:
             url = row[1]
+            # Write header row if file doesn't exist
+            if not os.path.exists("raw_htmldom_data.csv"):
+                csv.writer(open("raw_htmldom_data.csv", "w")).writerow([
+                    "website_url", "html_dom_path", "result"
+                ])
+            
             # skip if already in file
             saved_data = pd.read_csv("raw_htmldom_data.csv")
             urls_column = saved_data['website_url'].tolist()
@@ -91,5 +91,5 @@ if __name__ == "__main__":
                 print("URL already found; skipping")
                 continue
             html_dom_path, status = get_html_dom(url)
-            if status is True:
+            if status is True and os.path.exists(html_dom_path):
                 write_to_csv("raw_htmldom_data.csv", url, html_dom_path, True)

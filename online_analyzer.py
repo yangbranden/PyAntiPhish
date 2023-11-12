@@ -238,7 +238,7 @@ def is_typosquatting(url):
 # 11. Browser Lookup (again Google API client) for domain name + <title> tag content
 # 12. Google Safe Browsing
 # 13. VirusTotal API
-# 14. PhishTank online-valid list check
+# 14. Known-phishing database feeds (PhishTank, OpenPhish, Phishing.Database)
 # 15. WHOIS lookups
 ########################################################################################################################################################
 
