@@ -27,6 +27,7 @@
 # 22. Standard TLD in non-standard location
 # 23. Raw IP as URL
 # 24. HTTPS (TLS) status
+# 25. Levenshtein distance to URLs in whitelist
 
 import csv
 import os
@@ -35,9 +36,53 @@ from urllib.parse import urlparse
 import pickle
 import numpy as np
 import random
+import tldextract
+from fuzzywuzzy import fuzz
 
 # Define good TLDs to check
 good_tlds = ["com", "org", "net", "edu", "gov", "co", "uk", "eu", "ca", "de", "br", "jp"]
+
+# Define whitelisted URLs/domains
+good_urls = [
+    "https://www.att.com/", 
+    "https://www.paypal.com/", 
+    "https://www.microsoft.com/",
+    "https://www.dhl.com/",
+    "https://www.facebook.com/",
+    "https://www.irs.gov/",
+    "https://www.verizon.com/",
+    "https://www.mitsubishi.com/",
+    "https://www.adobe.com/",
+    "https://www.amazon.com/",
+    "https://www.apple.com/",
+    "https://www.costco.com/",
+    "https://www.wellsfargo.com/",
+    "https://www.ebay.com/",
+    "https://www.post.ch/",
+    "https://www.naver.com/",
+    "https://www.instagram.com/",
+    "https://www.whatsapp.com/",
+    "https://www.rakuten.com/"
+    "https://www.americanexpress.com/",
+    "https://www.office.com/",
+    "https://outlook.office365.com/",
+    "https://login.microsoftonline.com/",
+    "https://www.chase.com/",
+    "https://www.coinbase.com/",
+    "https://www.netflix.com/",
+    "https://www.fedex.com/",
+    "https://www.usps.com/",
+    "https://www.ups.com/",
+    "https://www.linkedin.com/",
+    "https://www.google.com/",
+    "https://www.google.co.uk/",
+    "https://www.bankofamerica.com/",
+    "https://store.steampowered.com/",
+    "https://steamcommunity.com/",
+    "https://discord.com/",
+    "https://www.roblox.com/",
+    "https://www.homedepot.com/"
+]
 
 # Feature 1 is length of whole URL; we exclude scheme because too inconsistent
 def get_url_len(url):
@@ -151,6 +196,31 @@ def tls_status(url):
     # Check if the scheme is "https"
     return parsed_url.scheme == "https"
 
+# Feature 25 (Typosquatting; Levenshtein distance with netloc)
+def is_typosquatting(url):
+    # Ensure urlparse is able to work properly
+    if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
+        url = '//' + url
+
+    # Get domain name (i.e. netloc; exclude scheme, path, and other parts of URL)
+    domain = tldextract.extract(url).domain
+    
+    # Compare netloc with whitelisted domains' netlocs
+    highest_similarity = 0
+    for good_url in good_urls:
+        wl_domain = tldextract.extract(good_url).domain
+        similarity = fuzz.ratio(domain, wl_domain)
+        # print(f"{domain} and {wl_domain} similarity: {similarity}")
+        
+        if similarity > highest_similarity:
+            highest_similarity = similarity
+    
+    # Consider typosquatting if > 85% and not 100%
+    if highest_similarity > 85 and highest_similarity != 100:
+        return True
+    
+    return False
+
 ########################################################################################################################################################
 
 # Write row of CSV
@@ -178,7 +248,7 @@ def write_to_csv(filename, url, result):
             csv_writer.writerow([
                 "website_url", "url_length", "netloc_length", "pathcomp_length", "period_count", "slash_count", "percent_count", "dash_count", "underscore_count", 
                 "question_count", "ampersand_count", "hashsign_count", "exclamation_count", "atsign_count", "comma_count", "equal_count", "plus_count", 
-                "colon_count", "semicolon_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "result"
+                "colon_count", "semicolon_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting", "result"
             ])
 
         url_length = get_url_len(url)
@@ -205,23 +275,17 @@ def write_to_csv(filename, url, result):
         has_bad_tld_location = bad_tld_location(url)
         has_raw_ip = raw_ip_as_url(url)
         has_tls = tls_status(url)
+        typosquatting = is_typosquatting(url)
         
         row = [
             url, url_length, netloc_length, pathcomp_length, period_count, slash_count, percent_count, dash_count, underscore_count, 
             question_count, ampersand_count, hashsign_count, exclamation_count, atsign_count, comma_count, equal_count, plus_count, 
-            colon_count, semicolon_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, result
+            colon_count, semicolon_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting, result
         ]
 
         csv_writer.writerow(row)
         # print("Data written to CSV file:", row)
         return True
-
-# Get number of rows of CSV file
-def count_rows(csv_file):
-    with open(csv_file, 'r') as file:
-        csv_reader = csv.reader(file)
-        row_count = sum(1 for row in csv_reader)
-        return row_count
 
 # Get results from existing datasets (add entire csv)
 def extract_from_file(source_csv, url_index, result_index, output_csv):
@@ -341,11 +405,12 @@ def predict_url(url, model_selector):
     has_bad_tld_location = 1 if bad_tld_location(url) else 0
     has_raw_ip = 1 if raw_ip_as_url(url) else 0
     has_tls = 1 if tls_status(url) else 0
+    typosquatting = 1 if is_typosquatting(url) else 0
     
     target_url_data = np.array([[
         url_length, netloc_length, pathcomp_length, period_count, slash_count, percent_count, dash_count, underscore_count, 
         question_count, ampersand_count, hashsign_count, exclamation_count, atsign_count, comma_count, equal_count, plus_count, 
-        colon_count, semicolon_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls
+        colon_count, semicolon_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
     ]])
     
     print(target_url_data)
@@ -355,23 +420,23 @@ def predict_url(url, model_selector):
 
 if __name__ == "__main__":
     # TEST MODEL
-    website_url = input("Enter the website URL: ")
+    # website_url = input("Enter the website URL: ")
     
-    print("LR")
-    predict_url(website_url, 0)
-    print()
-    print("SVM")
-    predict_url(website_url, 1)
-    print()
-    print("KNN")
-    predict_url(website_url, 2)
-    print()
-    print("RF")
-    predict_url(website_url, 3)
-    print()
+    # print("LR")
+    # predict_url(website_url, 0)
+    # print()
+    # print("SVM")
+    # predict_url(website_url, 1)
+    # print()
+    # print("KNN")
+    # predict_url(website_url, 2)
+    # print()
+    # print("RF")
+    # predict_url(website_url, 3)
+    # print()
     
     # ADD DATA FROM FILE; using the extract_from_file function I made so that it is easy to create specific splits of data (and add more/less as needed)
-    # extract_from_file(source_csv="./raw_url_data/balanced_urls.csv", url_index=0, result_index=1, output_csv="offline_data.csv", max_rows=10000, num_benign=100, num_phishing=10)
-    # extract_from_file(source_csv="./raw_url_data/malicious_phish.csv", url_index=0, result_index=1, output_csv="offline_data.csv", max_rows=10000, num_benign=100, num_phishing=10)
-    # extract_from_file(source_csv="./raw_url_data/urldata.csv", url_index=1, result_index=2, output_csv="offline_data.csv", max_rows=10000, num_benign=100, num_phishing=10)
-    # extract_from_file(source_csv="./raw_url_data/online-valid.csv", url_index=1, result_index=4, output_csv="offline_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
+    extract_from_file(source_csv="./raw_url_data/balanced_urls.csv", url_index=0, result_index=1, output_csv="offline_data.csv", max_rows=5000, num_benign=100, num_phishing=10)
+    extract_from_file(source_csv="./raw_url_data/malicious_phish.csv", url_index=0, result_index=1, output_csv="offline_data.csv", max_rows=5000, num_benign=100, num_phishing=10)
+    extract_from_file(source_csv="./raw_url_data/urldata.csv", url_index=1, result_index=2, output_csv="offline_data.csv", max_rows=5000, num_benign=100, num_phishing=10)
+    extract_from_file(source_csv="./raw_url_data/online-valid.csv", url_index=1, result_index=4, output_csv="offline_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
