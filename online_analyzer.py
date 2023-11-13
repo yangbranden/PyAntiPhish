@@ -234,12 +234,11 @@ def is_typosquatting(url):
 #       a. Empty (capable of running JS)
 #       b. Domain different from the webpage domain
 #  9. Ratio of nil anchors (href="#") to all anchors (i.e. percentage of nil anchors)
-# 10. TF-IDF of page
-# 11. Browser Lookup (again Google API client) for domain name + <title> tag content
-# 12. Google Safe Browsing
-# 13. VirusTotal API
-# 14. Known-phishing database feeds (PhishTank, OpenPhish, Phishing.Database)
-# 15. WHOIS lookups
+# 10. TF-IDF of page to get term set --> Browser Lookup (Google API client) of term set + *maybe* <title> tag content
+# 11. Google Safe Browsing
+# 12. VirusTotal API 
+# 13. WHOIS lookups
+# 14. Known-phishing database feeds (PhishTank, OpenPhish, Phishing.Database) - basically just make a big list in Python and check if the URL is in there
 ########################################################################################################################################################
 
 blacklisted_words = [
