@@ -16,8 +16,8 @@ train = True
 iterations = 10
 model_selector = 0
 
-LR_max_iter = 1500
-KNN_n_neighbors = 5
+LR_max_iter = 3000
+KNN_n_neighbors = 11
 RF_n_estimators = 100
 
 if model_selector == 0: # Logistic Regression
@@ -40,7 +40,7 @@ data = data.replace({False: 0, True: 1})
 # Define features (x) and labels (y)
 features = np.array(data[["url_length", "netloc_length", "pathcomp_length", "period_count", "slash_count", "percent_count", "dash_count", "underscore_count", 
                 "question_count", "ampersand_count", "hashsign_count", "exclamation_count", "atsign_count", "comma_count", "equal_count", "plus_count", 
-                "colon_count", "semicolon_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls"]])
+                "colon_count", "semicolon_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting"]])
 labels = np.array(data["result"])
 test = np.array(data)
 # print(features)
