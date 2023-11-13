@@ -365,7 +365,7 @@ def nil_anchor_ratio(html_content):
     else:
         return nil_anchor_count / total_anchors
 
-# Feature 10: TF-IDF of page
+# Feature 10: TF-IDF of page to get keywords (mostly looking for brand/company name) + google search  
 
 
 ########################################################################################################################################################
