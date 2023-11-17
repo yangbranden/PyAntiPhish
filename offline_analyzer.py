@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 
-# Offline checks (URL only)
-# Features extracted from script:
+# URL-based features:
 #  1. Length of URL
 #  2. Length of netloc (domain + subdomain)
 #  3. Length of path components
-#  Frequency of non-alphanumeric (possibly suspicious) characters (‘.’, ‘/’, ‘%’, ‘-’, ‘?’, ‘!’, ‘@’, ‘,’, ‘&’, ‘#’, ‘=’, ‘_’, ‘+’, ‘:’, ‘;’)
+#  Frequency of suspicious characters (TODO: remove like half of these; aim to have < 15 features)
 #  4. ‘.’ count
 #  5. ‘/’ count
 #  6. ‘%’ count
@@ -417,6 +416,7 @@ def predict_url(url, model_selector):
     print(target_url_data)
     
     prediction = model.predict(target_url_data)
+    print(prediction, type(prediction))
     print(f"The model predicted {url} to be {prediction[0]}.")
 
 if __name__ == "__main__":

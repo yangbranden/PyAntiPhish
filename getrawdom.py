@@ -74,10 +74,35 @@ def write_to_csv(filename, url, html_dom_path, result):
     
 
 if __name__ == "__main__":
-    with open("online-valid.csv", "r") as f:
+    # For phishing/malicious gathering 
+    # with open("online-valid.csv", "r") as f:
+    #     reader = csv.reader(f)
+    #     for row in reader:
+    #         url = row[1]
+    #         # Write header row if file doesn't exist
+    #         if not os.path.exists("raw_htmldom_data.csv"):
+    #             csv.writer(open("raw_htmldom_data.csv", "w")).writerow([
+    #                 "website_url", "html_dom_path", "result"
+    #             ])
+            
+    #         # skip if already in file
+    #         saved_data = pd.read_csv("raw_htmldom_data.csv")
+    #         urls_column = saved_data['website_url'].tolist()
+    #         if url in urls_column:
+    #             print("URL already found; skipping")
+    #             continue
+    #         html_dom_path, status = get_html_dom(url)
+    #         if status is True and os.path.exists(html_dom_path):
+    #             write_to_csv("raw_htmldom_data.csv", url, html_dom_path, True)
+    
+    # For benign gathering
+    with open("offline_data.csv", "r") as f:
         reader = csv.reader(f)
         for row in reader:
-            url = row[1]
+            result = row[26] # we read from our collected offline_data.csv file; 26th item has the result
+            url = row[0]
+            if result == "phishing":
+                continue
             # Write header row if file doesn't exist
             if not os.path.exists("raw_htmldom_data.csv"):
                 csv.writer(open("raw_htmldom_data.csv", "w")).writerow([
@@ -92,4 +117,4 @@ if __name__ == "__main__":
                 continue
             html_dom_path, status = get_html_dom(url)
             if status is True and os.path.exists(html_dom_path):
-                write_to_csv("raw_htmldom_data.csv", url, html_dom_path, True)
+                write_to_csv("raw_htmldom_data.csv", url, html_dom_path, False)
