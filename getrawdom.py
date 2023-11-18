@@ -3,6 +3,7 @@
 import requests
 import os
 import csv
+import random
 import pandas as pd
 
 # THIS IS TO GATHER THE RAW DATA BECAUSE PHISHING PAGES GET DELETED QUICKLY SO I AM GOING TO SAVE THE FULL DOM
@@ -96,9 +97,12 @@ if __name__ == "__main__":
     #             write_to_csv("raw_htmldom_data.csv", url, html_dom_path, True)
     
     # For benign gathering
-    with open("offline_data.csv", "r") as f:
+    with open("offline_data.csv", "r", newline='', encoding="latin-1") as f:
         reader = csv.reader(f)
-        for row in reader:
+        rows = list(reader)
+        
+        for _ in range(1000):
+            row = random.choice(rows)
             result = row[26] # we read from our collected offline_data.csv file; 26th item has the result
             url = row[0]
             if result == "phishing":
