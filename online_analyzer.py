@@ -14,9 +14,11 @@
 #       a. Empty (capable of running JS)
 #       b. Domain different from the webpage domain
 #  9. Ratio of nil anchors (href="#") to all anchors (i.e. percentage of nil anchors)
-# 10. TF-IDF of page to get term set --> Browser Lookup (Google API client) of term set + *maybe* <title> tag content
+# 10. VirusTotal API (includes Google Safe Browsing + many many more) !!! This is not fed into ML model, simply used as blacklist checks
+
+# Future improvements:
 # 11. (Using WHOIS lookup API) Creation date, Expiration date 
-# 12. VirusTotal API (includes Google Safe Browsing + many many more) !!! This is not fed into ML model, simply used as blacklist checks
+# 12. TF-IDF of page to get term set --> Browser Lookup (Google API client) of term set + *maybe* <title> tag content
 
 import requests
 from bs4 import BeautifulSoup
@@ -155,7 +157,7 @@ def nil_anchor_ratio(html_content):
         return nil_anchor_count / total_anchors
 
 # Feature 10: TF-IDF of page to get keywords (mostly looking for brand/company name) + google search
-
+# This is a potential future implementation for when I obtain a larger cranium
 
 ########################################################################################################################################################
 
@@ -194,11 +196,13 @@ def write_to_csv(filename, url, result):
 
         # Perform HTTP request, exit if no response
         response = requests.get(url)
+        if response.status_code != 200:
+            return False
 
         if not file_exists:
             # Write header row
             csv_writer.writerow([
-                "website_url", "has_bad_form", "asks_username_email", "asks_password", "asks_phone", "asks_birthday", "asks_card_info", "asks_ssn", "has_bad_action",
+                "website_url", "has_bad_form", "asks_username_email", "asks_password", "asks_phone", "asks_birthday", "asks_card_info", "asks_ssn", "has_bad_action", "nil_anchors",
                 "result"
             ])
             
@@ -210,9 +214,10 @@ def write_to_csv(filename, url, result):
         asks_card_info = asks_for_pii(response, ["credit card", "credit card number", "debit card", "debit card number", "card number", "card verification", "card verification value", "cvv", "expiration date", "expiry date"])
         asks_ssn = asks_for_pii(response, ["social security number", "social security", "ssn", "ssn id", "ssn digits"])
         has_bad_action = bad_action(response, url)
+        nil_anchors = nil_anchor_ratio(response)
         
         row = [
-            url, has_bad_form, asks_username_email, asks_password, asks_phone, asks_birthday, asks_card_info, asks_ssn, has_bad_action,
+            url, has_bad_form, asks_username_email, asks_password, asks_phone, asks_birthday, asks_card_info, asks_ssn, has_bad_action, nil_anchors,
             result
         ]
 
@@ -220,12 +225,35 @@ def write_to_csv(filename, url, result):
         # print("Data written to CSV file:", row)
         return True
 
+# Extract collected HTML DOM data
+# TODO
+def extract_from_file(source_csv, url_index, htmldom_index, result, output_csv):
+    with open(source_csv, 'r', newline='', encoding='utf-8') as f:
+        csv_reader = csv.reader(f)
+        length = len(list(csv_reader))
+        # for row in csv_reader:
+        #     result = row[result_index]
+            
+        #     if result in ["benign"]:
+        #         result = "benign"
+        #     elif result in ["phishing", "malicious", "yes"]:
+        #         result = "phishing"
+            
+        #     if result not in ["benign", "phishing"]:
+        #         continue
+            
+        #     try:
+        #         write_to_csv(output_csv, row[url_index], result)
+        #     except Exception:
+        #         continue
+
 if __name__ == "__main__":
     # website_url = input("Enter the website URL: ")
     # html_dom, status = get_html_dom(website_url)
-    # input_form_exists(html_dom)
-    for i in range(10, 20):
-        with open(f"./raw_htmldom_data/{i}.html", "rb") as f:
-            bad_form(f.read())
+    pass
+    
+    # for i in range(10, 20):
+    #     with open(f"./raw_htmldom_data/{i}.html", "rb") as f:
+    #         bad_form(f.read())
     # if status is True:
     #     write_to_csv("htmldom_data.csv", website_url, html_dom, True)

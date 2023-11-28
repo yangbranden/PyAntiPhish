@@ -1,32 +1,22 @@
 #!/usr/bin/python3
 
 # URL-based features:
-#  1. Length of URL
-#  2. Length of netloc (domain + subdomain)
-#  3. Length of path components
-#  Frequency of suspicious characters (TODO: remove like half of these; aim to have < 15 features)
+#  1. Length of domain to length of netloc (domain + subdomain)
+#  2. Length of netloc (domain + subdomain) to length of URL
+#  3. Length of path components to length of URL
+#  Frequency of suspicious characters
 #  4. ‘.’ count
-#  5. ‘/’ count
-#  6. ‘%’ count
-#  7. ‘-’ count
-#  8. ‘?’ count
-#  9. ‘!’ count
-# 10. ‘@’ count
-# 11. ‘,’ count
-# 12. ‘&’ count
-# 13. ‘#’ count
-# 14. ‘=’ count
-# 15. ‘_’ count
-# 16. ‘+’ count
-# 17. ‘:’ count
-# 18. ‘;’ count
-# 19. ‘~’ count
-# 20. ‘&’ count
-# 21. Non-standard TLD in standard location
-# 22. Standard TLD in non-standard location
-# 23. Raw IP as URL
-# 24. HTTPS (TLS) status
-# 25. Levenshtein distance to URLs in whitelist
+#  5. ‘%’ count
+#  6. ‘-’ count
+#  7. ‘@’ count
+#  8. ‘&’ count
+#  9. ‘=’ count
+# 10. ‘#’ count
+# 11. Non-standard TLD in standard location
+# 12. Standard TLD in non-standard location
+# 13. Raw IP as URL
+# 14. HTTPS (TLS) status
+# 15. Levenshtein distance to URLs in whitelist
 
 import csv
 import os
@@ -84,7 +74,8 @@ good_urls = [
     "https://www.youtube.com/"
 ]
 
-# Feature 1 is length of whole URL; we exclude scheme because too inconsistent
+# Feature 1: Length of domain to length of netloc (domain + subdomain)
+# Exclude scheme because too inconsistent
 def get_url_len(url):
     # Ensure urlparse is able to get netloc properly
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
@@ -104,35 +95,44 @@ def get_url_len(url):
     
     return url_len
 
-# Feature 2 is length of the netloc of the URL (again exclude scheme)
-def get_netloc_len(url):
+# Feature 2 is length of subdomain to length of netloc (domain + subdomain)
+# Exclude scheme because too inconsistent
+def get_subdomain_len_ratio(url):
+    extracted = tldextract.extract(url)
+    
+    subdomain = extracted.subdomain
+    if extracted.subdomain == '':
+        netloc = extracted.domain + '.' + extracted.suffix
+    else:
+        netloc = extracted.subdomain + '.' + extracted.domain + '.' + extracted.suffix
+    
+    ratio = len(subdomain) / len(netloc)
+    
+    return ratio
+
+# Feature 3 is length of path components to length of URL
+# Exclude scheme because too inconsistent
+def get_pathcomp_len_ratio(url):
     # Ensure urlparse is able to get netloc properly
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
         url = '//' + url
     
-    netloc_len = len(urlparse(url).netloc)
+    parsed = urlparse(url)
+    pathcomp = parsed.path
+    if parsed.params: # params are rarely used
+        pathcomp += ';' + parsed.params
+    if parsed.query:
+        pathcomp += '?' + parsed.query
+    if parsed.fragment:
+        pathcomp += '#' + parsed.fragment
     
-    return netloc_len
+    total = parsed.netloc + pathcomp
+    
+    ratio = len(pathcomp) / len(total)
+    
+    return ratio
 
-# Feature 3 is length of path components of the URL (again exclude scheme)
-def get_pathcomp_len(url):
-    # Ensure urlparse is able to get netloc properly
-    if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
-        url = '//' + url
-    
-    parsed_url = urlparse(url)
-    result = parsed_url.path
-    if parsed_url.params: # params are rarely used
-        result += ';' + parsed_url.params
-    if parsed_url.query:
-        result += '?' + parsed_url.query
-    if parsed_url.fragment:
-        result += '#' + parsed_url.fragment
-    pathcomp_len = len(result)
-    
-    return pathcomp_len
-
-# Features 4-20 (character count)
+# Features 4-10 (character count)
 def count_char(url, char):
     count = 0
     for c in url:
@@ -140,7 +140,7 @@ def count_char(url, char):
             count += 1
     return count
 
-# Feature 21 (Non-standard TLD in standard location)
+# Feature 11 (Non-standard TLD in standard location)
 def bad_tld(url):
     # Ensure urlparse is able to work properly
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
@@ -159,7 +159,7 @@ def bad_tld(url):
         # print("Non-standard TLD found:", split_netloc[last_index], "in", split_netloc)
         return True
 
-# Feature 22 (Standard TLD in non-standard location)
+# Feature 12 (Standard TLD in non-standard location)
 def bad_tld_location(url):
     # Ensure urlparse is able to work properly
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
@@ -176,7 +176,7 @@ def bad_tld_location(url):
             return True
     return False
 
-# Feature 23 (Raw IP as URL (netloc))
+# Feature 13 (Raw IP as URL (netloc))
 def raw_ip_as_url(url):
     # Extract the netloc (network location) part from the parsed URL
     domain = urlparse(url).netloc
@@ -188,7 +188,7 @@ def raw_ip_as_url(url):
     except socket.error:
         return False
 
-# Feature 24 (HTTPS/TLS status)
+# Feature 14 (HTTPS/TLS status)
 def tls_status(url):
     # Parse the URL
     parsed_url = urlparse(url)
@@ -196,7 +196,7 @@ def tls_status(url):
     # Check if the scheme is "https"
     return parsed_url.scheme == "https"
 
-# Feature 25 (Typosquatting; Levenshtein distance with netloc)
+# Feature 15 (Typosquatting; Levenshtein distance with netloc)
 def is_typosquatting(url):
     # Ensure urlparse is able to work properly
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
@@ -246,31 +246,20 @@ def write_to_csv(filename, url, result):
         if not file_exists:
             # Write header row
             csv_writer.writerow([
-                "website_url", "url_length", "netloc_length", "pathcomp_length", "period_count", "slash_count", "percent_count", "dash_count", "underscore_count", 
-                "question_count", "ampersand_count", "hashsign_count", "exclamation_count", "atsign_count", "comma_count", "equal_count", "plus_count", 
-                "colon_count", "semicolon_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting", "result"
+                "website_url", "url_length", "subdomain_len_ratio", "pathcomp_len_ratio", "period_count", "percent_count", "dash_count", "atsign_count", 
+                "ampersand_count", "equal_count", "hashsign_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting", "result"
             ])
 
         url_length = get_url_len(url)
-        netloc_length = get_netloc_len(url)
-        pathcomp_length = get_pathcomp_len(url)
+        subdomain_len_ratio = get_subdomain_len_ratio(url)
+        pathcomp_len_ratio = get_pathcomp_len_ratio(url)
         period_count = count_char(url, '.')
-        slash_count = count_char(url, '/')
         percent_count = count_char(url, '%')
         dash_count = count_char(url, '-')
-        underscore_count = count_char(url, '_')
-        question_count = count_char(url, '?')
-        ampersand_count = count_char(url, '&')
-        hashsign_count = count_char(url, '#')
-        exclamation_count = count_char(url, '!')
         atsign_count = count_char(url, '@')
-        comma_count = count_char(url, ',')
+        ampersand_count = count_char(url, '&')
         equal_count = count_char(url, '=')
-        plus_count = count_char(url, '+')
-        colon_count = count_char(url, ':')
-        semicolon_count = count_char(url, ';')
-        tilde_count = count_char(url, '~')
-        dollar_count = count_char(url, '$')
+        hashsign_count = count_char(url, '#')
         has_bad_tld = bad_tld(url)
         has_bad_tld_location = bad_tld_location(url)
         has_raw_ip = raw_ip_as_url(url)
@@ -278,9 +267,8 @@ def write_to_csv(filename, url, result):
         typosquatting = is_typosquatting(url)
         
         row = [
-            url, url_length, netloc_length, pathcomp_length, period_count, slash_count, percent_count, dash_count, underscore_count, 
-            question_count, ampersand_count, hashsign_count, exclamation_count, atsign_count, comma_count, equal_count, plus_count, 
-            colon_count, semicolon_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting, result
+            url, url_length, subdomain_len_ratio, pathcomp_len_ratio, period_count, percent_count, dash_count, atsign_count, 
+            ampersand_count, equal_count, hashsign_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting, result
         ]
 
         csv_writer.writerow(row)
@@ -382,25 +370,15 @@ def predict_url(url, model_selector):
     
     # Get the necessary data points from the URL
     url_length = get_url_len(url)
-    netloc_length = get_netloc_len(url)
-    pathcomp_length = get_pathcomp_len(url)
+    subdomain_len_ratio = get_subdomain_len_ratio(url)
+    pathcomp_len_ratio = get_pathcomp_len_ratio(url)
     period_count = count_char(url, '.')
-    slash_count = count_char(url, '/')
     percent_count = count_char(url, '%')
     dash_count = count_char(url, '-')
-    underscore_count = count_char(url, '_')
-    question_count = count_char(url, '?')
-    ampersand_count = count_char(url, '&')
-    hashsign_count = count_char(url, '#')
-    exclamation_count = count_char(url, '!')
     atsign_count = count_char(url, '@')
-    comma_count = count_char(url, ',')
+    ampersand_count = count_char(url, '&')
     equal_count = count_char(url, '=')
-    plus_count = count_char(url, '+')
-    colon_count = count_char(url, ':')
-    semicolon_count = count_char(url, ';')
-    tilde_count = count_char(url, '~')
-    dollar_count = count_char(url, '$')
+    hashsign_count = count_char(url, '#')
     has_bad_tld = 1 if bad_tld(url) else 0
     has_bad_tld_location = 1 if bad_tld_location(url) else 0
     has_raw_ip = 1 if raw_ip_as_url(url) else 0
@@ -408,9 +386,8 @@ def predict_url(url, model_selector):
     typosquatting = 1 if is_typosquatting(url) else 0
     
     target_url_data = np.array([[
-        url_length, netloc_length, pathcomp_length, period_count, slash_count, percent_count, dash_count, underscore_count, 
-        question_count, ampersand_count, hashsign_count, exclamation_count, atsign_count, comma_count, equal_count, plus_count, 
-        colon_count, semicolon_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
+        url_length, subdomain_len_ratio, pathcomp_len_ratio, period_count, percent_count, dash_count, atsign_count, 
+        ampersand_count, equal_count, hashsign_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
     ]])
     
     print(target_url_data)
