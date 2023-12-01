@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PyAntiPhish - Page Blocked</title>
+    <title>PyAntiPhish - Full Report Details</title>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Roboto');
 
@@ -10,7 +10,7 @@
             color: black;
             text-align: left;
             font-family: 'Roboto', sans-serif;
-            font-size: medium;
+            font-size: large;
         }
         button {
             border: 1px solid white;
@@ -24,14 +24,60 @@
         #title {
             text-align: center;
         }
+        .categoryHeader {
+            background-color: rgb(170, 170, 170);
+            border: 2px solid black;
+            width: 80%;
+            margin: auto;
+            margin-top: 2rem;
+            padding: 2rem 2rem;
+            font-weight: bold;
+        }
+        .categoryEntry {
+            background-color: rgb(190, 190, 190);
+            border: 1px solid black;
+            width: 80%;
+            margin: auto;
+            padding: 2rem 2rem;
+            padding-bottom: 3.5rem;
+            text-align: center;
+        }
+        .entryTitle {
+            float: left;
+        }
+        .entryStatus {
+            float: right;
+        }
     </style>
 </head>
 <body>
     <div id="fullReport">
         <h1 id="title">PyAntiPhish</h1>
-        <div id="urlAnalysis">TODO</div>
-        <div id="htmlDOMAnalysis"></div>
-        <div id="virusTotalAnalysis"></div>
+        <div id="urlAnalysis">
+            <div class="categoryHeader">URL Analyzer</div>
+            <div class="categoryEntry">
+                <span class="entryTitle">RandomForest</span>
+                <span class="entryStatus">Clean</span>
+            </div>
+            <div class="categoryEntry">
+                <span class="entryTitle">TODO</span>
+                <span class="entryStatus">...</span>
+            </div>
+        </div>
+        <div id="htmlDOMAnalysis">
+            <div class="categoryHeader">HTML DOM Analyzer</div>
+            <div class="categoryEntry">
+                <span class="entryTitle">TODO</span>
+                <span class="entryStatus">...</span>
+            </div>
+        </div>
+        <div id="virusTotalAnalysis">
+            <div class="categoryHeader">VirusTotal</div>
+            <div class="categoryEntry">
+                <span class="entryTitle">TODO</span>
+                <span class="entryStatus">...</span>
+            </div>
+        </div>
     </div>
     <script src="./details.js"></script>
 </body>
