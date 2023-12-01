@@ -1,0 +1,27 @@
+{
+  "name": "pyantiphish",
+  "version": "1.0.0",
+  "description": "Branden Yang Barrett Honors Thesis",
+  "type": "module",
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
+  "browser": {
+    "child_process": false
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chrome": "^0.0.246",
+    "@types/node": "^20.8.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "process": "^0.11.10"
+  }
+}

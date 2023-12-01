@@ -1,0 +1,24 @@
+{
+   "name": "PyAntiPhish",
+   "description": "Branden Yang Barrett Thesis Project",
+   "version": "1.0",
+   "manifest_version": 3,
+   "action": {},
+   "permissions": [
+      "activeTab",
+      "scripting",
+      "tabs"
+   ],
+   "host_permissions": [
+      "*://*/*"
+   ],
+   "web_accessible_resources": [
+      {
+        "resources": [ "block.html", "block.js", "details.html" ],
+        "matches": [ "*://*/*" ]
+      }
+   ],
+   "background": {
+      "service_worker": "background.js"
+   }
+ }

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PyAntiPhish - Page Blocked</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        body {
+            background-color: rgb(150, 0, 0);
+            color: white;
+            text-align: left;
+            font-family: 'Roboto', sans-serif;
+        }
+        button {
+            border: 1px solid white;
+            border-radius: 4px;
+            margin-top: 1.5em;
+            padding: 0 1.5em;
+            min-height: 32px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+        a {
+            color: white;
+        }
+        #blockedMessageContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 32em;
+            min-height: 10em;
+        }
+        #title {
+            display: flex;
+            font-size: large;
+            font-weight: bold;
+        }
+        #warningIcon {
+            vertical-align: middle;
+            width: 40px;
+            height: auto;
+            margin-right: 10px;
+        }
+        #description {
+            font-size: medium;
+            word-wrap: break-word;
+        }
+        #buttons {
+            text-align: right;
+        }
+        #goBack {
+            color: black;
+            background-color: white;
+        }
+        #seeDetails {
+            color: white;
+            background-color: transparent;
+        }
+        #detailsContainer {
+            position: absolute;
+            background-color: rgb(120, 0, 0);
+            left: -5%;
+            right: -5%;
+            margin: auto;
+            margin-top: 2rem;
+            padding: 20px 20px;
+            font-size: small;
+        }
+        #moreButtons {
+            text-align: right;
+        }
+        #seeReport {
+            color: black;
+            background-color: white;
+        }
+        #proceedButton {
+            color: rgb(255, 0, 0);
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="blockedMessageContainer">
+        <div id="title"><img id="warningIcon" src="./warning.svg"><h1>Phishing page detected</h1></div>
+        <div id="description">PyAntiPhish extension detected a phishing site. Please navigate away from this page or see details for further information.</div>
+        <div id="buttons">
+            <button type="button" id="goBack">Go back</button>
+            <button type="button" id="seeDetails">See details</button>
+        </div>
+        <div id="detailsContainer" hidden>
+            <div id="detailsText"></div>
+            <div id="moreButtons">
+                <button type="button" id="seeReport">See full report</button>
+                <button type="button" id="proceedButton">Proceed with caution</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./block.js"></script>
+</body>
+</html>
