@@ -28,6 +28,7 @@ import pickle
 import numpy as np
 import tldextract
 from fuzzywuzzy import fuzz
+import random
 
 ########################################################################################################################################################
 
@@ -173,8 +174,8 @@ def get_html_dom(url):
         print("Failed to retrieve the webpage. Status code:", response.status_code)
         return None, False
 
-# Write row of CSV
-def write_to_csv(filename, url, result):
+# Extract features from requests.get response; write to output CSV
+def extract_features_online(filename, url, result):
     file_exists = os.path.exists(filename)
 
     # Read file if exists
@@ -224,27 +225,118 @@ def write_to_csv(filename, url, result):
         # print("Data written to CSV file:", row)
         return True
 
-# Extract collected HTML DOM data
-# TODO
-def extract_from_file(source_csv, url_index, htmldom_index, result, output_csv):
-    with open(source_csv, 'r', newline='', encoding='utf-8') as f:
-        csv_reader = csv.reader(f)
-        length = len(list(csv_reader))
-        # for row in csv_reader:
-        #     result = row[result_index]
+# Extract features from stored HTML DOM; write to output CSV
+# This is for the saved phishing HTML DOMs (but could technically also be used for saved benign HTML DOMs if wanted)
+def extract_features_offline(filename, url, htmldom_filepath, result):
+    file_exists = os.path.exists(filename)
+
+    # Read file if exists
+    if file_exists:
+        with open(filename, 'r', newline='') as f:
+            reader = csv.reader(f)
             
-        #     if result in ["benign"]:
-        #         result = "benign"
-        #     elif result in ["phishing", "malicious", "yes"]:
-        #         result = "phishing"
+            # Only append row if url doesn't already exist
+            for row in reader:
+                website_url = row[0]
+                if website_url == url:
+                    print(f"URL {url} already found; skipping.")
+                    return False
+    
+    # Open file as append (creates file if doesn't exist)
+    with open(filename, 'a', newline='') as f:
+        csv_writer = csv.writer(f)
+
+        # Get stored HTML DOM from file location; exit if not found
+        try:
+            htmldom_file = open(htmldom_filepath, 'r')
+            html_dom = htmldom_file.read()
+        except FileNotFoundError:
+            return False
+
+        if not file_exists:
+            # Write header row
+            csv_writer.writerow([
+                "website_url", "has_bad_form", "asks_username_email", "asks_password", "asks_phone", "asks_birthday", "asks_card_info", "asks_ssn", "has_bad_action", "nil_anchors",
+                "result"
+            ])
             
-        #     if result not in ["benign", "phishing"]:
-        #         continue
+        has_bad_form = bad_form(html_dom)
+        asks_username_email = asks_for_pii(html_dom, ["login", "username", "email", "email address", "e-mail", "e-mail address"])
+        asks_password = asks_for_pii(html_dom, ["password", "passphrase", "passcode", "pin", "pin number"])
+        asks_phone = asks_for_pii(html_dom, ["phone number", "telephone number", "mobile number", "cell phone number"])
+        asks_birthday = asks_for_pii(html_dom, ["birthday", "birth day", "birth date", "date of birth", "dob", "bday"])
+        asks_card_info = asks_for_pii(html_dom, ["credit card", "credit card number", "debit card", "debit card number", "card number", "card verification", "card verification value", "cvv", "expiration date", "expiry date"])
+        asks_ssn = asks_for_pii(html_dom, ["social security number", "social security", "ssn", "ssn id", "ssn digits"])
+        has_bad_action = bad_action(html_dom, url)
+        nil_anchors = nil_anchor_ratio(html_dom)
+        
+        row = [
+            url, has_bad_form, asks_username_email, asks_password, asks_phone, asks_birthday, asks_card_info, asks_ssn, has_bad_action, nil_anchors,
+            result
+        ]
+
+        csv_writer.writerow(row)
+        # print("Data written to CSV file:", row)
+        return True
+
+# Extract features from collected HTML DOM data
+# TODO:
+def extract_from_file(source_csv, url_index, htmldom_index, result_index, output_csv, max_rows, num_benign=10, num_phishing=1):
+    if os.path.exists(output_csv):
+        with open(output_csv, 'r') as f:
+            csv_reader = csv.reader(f)
+            count = sum(1 for row in csv_reader)
+    else:
+        count = 0
+    target_count = count + max_rows
+    while count < target_count:
+        with open(source_csv, 'r', newline='', encoding='utf-8') as f:
+            csv_reader = csv.reader(f)
+            rows = list(csv_reader)
             
-        #     try:
-        #         write_to_csv(output_csv, row[url_index], result)
-        #     except Exception:
-        #         continue
+            # Add specified number of random benign URLs
+            for _ in range(num_benign):
+                row = random.choice(rows)
+                result = row[result_index]
+                while result != "benign":
+                    row = random.choice(rows)
+                    # if the URL doesn't start with https:// then skip it because it is an outlier
+                    url = row[url_index]
+                    if not url.startswith("https://"):
+                        continue
+                    result = row[result_index]
+                    if result in ["benign"]:
+                        result = "benign"
+                    elif result in ["phishing", "malicious", "yes"]:
+                        result = "phishing"
+                    if result not in ["benign", "phishing"]:
+                        continue
+                try:
+                    extract_features_online(output_csv, row[url_index], result)
+                except Exception:
+                    continue
+            
+            # Add specified number of random phishing URL
+            for _ in range(num_phishing):
+                row = random.choice(rows)
+                result = row[result_index]
+                while result != "phishing":
+                    row = random.choice(rows)
+                    result = row[result_index]
+                    if result in ["benign"]:
+                        result = "benign"
+                    elif result in ["phishing", "malicious", "yes"]:
+                        result = "phishing"
+                    if result not in ["benign", "phishing"]:
+                        continue
+                try:
+                    extract_features_offline(output_csv, row[url_index], row[htmldom_index], result)
+                except Exception:
+                    continue
+        
+        with open(output_csv, 'r') as f:
+            csv_reader = csv.reader(f)
+            count = sum(1 for row in csv_reader)
 
 if __name__ == "__main__":
     # website_url = input("Enter the website URL: ")
@@ -256,3 +348,4 @@ if __name__ == "__main__":
     #         bad_form(f.read())
     # if status is True:
     #     write_to_csv("htmldom_data.csv", website_url, html_dom, True)
+    extract_from_file(source_csv="raw_htmldom_data.csv", url_index=0, htmldom_index=1, result_index=2, output_csv="url_data.csv", max_rows=5000, num_benign=0, num_phishing=100)

@@ -223,8 +223,8 @@ def is_typosquatting(url):
 
 ########################################################################################################################################################
 
-# Write row of CSV
-def write_to_csv(filename, url, result):
+# Extract features and write to output CSV
+def extract_features(filename, url, result):
     file_exists = os.path.exists(filename)
 
     # Read file if exists
@@ -291,7 +291,7 @@ def extract_from_file(source_csv, url_index, result_index, output_csv):
                 continue
             
             try:
-                write_to_csv(output_csv, row[url_index], result)
+                extract_features(output_csv, row[url_index], result)
             except Exception:
                 continue
 
@@ -327,7 +327,7 @@ def extract_from_file(source_csv, url_index, result_index, output_csv, max_rows,
                     if result not in ["benign", "phishing"]:
                         continue
                 try:
-                    write_to_csv(output_csv, row[url_index], result)
+                    extract_features(output_csv, row[url_index], result)
                 except Exception:
                     continue
             
@@ -345,7 +345,7 @@ def extract_from_file(source_csv, url_index, result_index, output_csv, max_rows,
                     if result not in ["benign", "phishing"]:
                         continue
                 try:
-                    write_to_csv(output_csv, row[url_index], result)
+                    extract_features(output_csv, row[url_index], result)
                 except Exception:
                     continue
         
