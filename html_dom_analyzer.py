@@ -309,7 +309,7 @@ def extract_from_file(source_csv, url_index, htmldom_index, result_index, output
                         continue
                     result = row[result_index]
                 try:
-                    extract_features_online(output_csv, row[url_index], result)
+                    extract_features_offline(output_csv, row[url_index], row[htmldom_index], result)
                 except Exception:
                     continue
             
@@ -333,10 +333,31 @@ def extract_from_file(source_csv, url_index, htmldom_index, result_index, output
             csv_reader = csv.reader(f)
             count = sum(1 for row in csv_reader)
 
+# Convert all rows of file into data
+def extract_entire_file(source_csv, url_index, htmldom_index, result_index, output_csv):
+    with open(source_csv, 'r', newline='', encoding='latin-1') as f:
+        csv_reader = csv.reader(f)
+        rows = list(csv_reader)
+        
+        for row in rows:
+            if row[result_index] == "True":
+                result = "phishing"
+            elif row[result_index] == "False":
+                result = "benign"
+            else:
+                print("Unknown result:", row)
+                continue
+            
+            try:
+                extract_features_offline(output_csv, row[url_index], row[htmldom_index], result)
+            except Exception:
+                continue
+
 if __name__ == "__main__":
     # TEST MODEL
     # website_url = input("Enter the website URL: ")
     # html_dom, status = get_html_dom(website_url)
     
     # ADD DATA
-    extract_from_file(source_csv="raw_htmldom_data.csv", url_index=0, htmldom_index=1, result_index=2, output_csv="htmldom_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
+    # extract_from_file(source_csv="raw_htmldom_data.csv", url_index=0, htmldom_index=1, result_index=2, output_csv="htmldom_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
+    extract_entire_file(source_csv="raw_htmldom_data.csv", url_index=0, htmldom_index=1, result_index=2, output_csv="htmldom_data.csv")
