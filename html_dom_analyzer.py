@@ -297,9 +297,10 @@ def extract_from_file(source_csv, url_index, htmldom_index, result_index, output
             for _ in range(num_benign):
                 row = random.choice(rows)
                 result = row[result_index]
+                print("Count:", count)
                 print("Attempting benign URL:", row[url_index])
                 while result != "False":
-                    print("Invalid.\n")
+                    print("Invalid;", result, "\n")
                     row = random.choice(rows)
                     print("Attempting benign URL:", row[url_index])
                     # if the URL doesn't start with https:// then skip it because it is an outlier
@@ -316,9 +317,10 @@ def extract_from_file(source_csv, url_index, htmldom_index, result_index, output
             for _ in range(num_phishing):
                 row = random.choice(rows)
                 result = row[result_index]
+                print("Count:", count)
                 print("Attempting phishing URL:", row[url_index])
                 while result != "True":
-                    print("Invalid.\n")
+                    print("Invalid;", result, "\n")
                     row = random.choice(rows)
                     print("Attempting phishing URL:", row[url_index])
                     result = row[result_index]
