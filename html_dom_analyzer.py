@@ -297,19 +297,16 @@ def extract_from_file(source_csv, url_index, htmldom_index, result_index, output
             for _ in range(num_benign):
                 row = random.choice(rows)
                 result = row[result_index]
-                while result != "benign":
+                print("Attempting benign URL:", row[url_index])
+                while result != "False":
+                    print("Invalid.\n")
                     row = random.choice(rows)
+                    print("Attempting benign URL:", row[url_index])
                     # if the URL doesn't start with https:// then skip it because it is an outlier
                     url = row[url_index]
                     if not url.startswith("https://"):
                         continue
                     result = row[result_index]
-                    if result in ["benign"]:
-                        result = "benign"
-                    elif result in ["phishing", "malicious", "yes"]:
-                        result = "phishing"
-                    if result not in ["benign", "phishing"]:
-                        continue
                 try:
                     extract_features_online(output_csv, row[url_index], result)
                 except Exception:
@@ -319,15 +316,12 @@ def extract_from_file(source_csv, url_index, htmldom_index, result_index, output
             for _ in range(num_phishing):
                 row = random.choice(rows)
                 result = row[result_index]
-                while result != "phishing":
+                print("Attempting phishing URL:", row[url_index])
+                while result != "True":
+                    print("Invalid.\n")
                     row = random.choice(rows)
+                    print("Attempting phishing URL:", row[url_index])
                     result = row[result_index]
-                    if result in ["benign"]:
-                        result = "benign"
-                    elif result in ["phishing", "malicious", "yes"]:
-                        result = "phishing"
-                    if result not in ["benign", "phishing"]:
-                        continue
                 try:
                     extract_features_offline(output_csv, row[url_index], row[htmldom_index], result)
                 except Exception:
