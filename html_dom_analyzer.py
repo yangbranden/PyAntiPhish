@@ -282,14 +282,14 @@ def extract_features_offline(filename, url, htmldom_filepath, result):
 # Extract features from collected HTML DOM data
 def extract_from_file(source_csv, url_index, htmldom_index, result_index, output_csv, max_rows, num_benign=10, num_phishing=1):
     if os.path.exists(output_csv):
-        with open(output_csv, 'r') as f:
+        with open(output_csv, 'r', encoding='latin-1') as f:
             csv_reader = csv.reader(f)
             count = sum(1 for row in csv_reader)
     else:
         count = 0
     target_count = count + max_rows
     while count < target_count:
-        with open(source_csv, 'r', newline='', encoding='utf-8') as f:
+        with open(source_csv, 'r', newline='', encoding='latin-1') as f:
             csv_reader = csv.reader(f)
             rows = list(csv_reader)
             
@@ -343,4 +343,4 @@ if __name__ == "__main__":
     # html_dom, status = get_html_dom(website_url)
     
     # ADD DATA
-    extract_from_file(source_csv="raw_htmldom_data.csv", url_index=0, htmldom_index=1, result_index=2, output_csv="url_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
+    extract_from_file(source_csv="raw_htmldom_data.csv", url_index=0, htmldom_index=1, result_index=2, output_csv="htmldom_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
