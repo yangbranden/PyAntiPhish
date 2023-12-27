@@ -14,7 +14,7 @@ import os
 # CONSTANTS
 train = True
 iterations = 10
-model_selector = 3
+model_selector = 2
 
 LR_max_iter = 3000
 KNN_n_neighbors = 11
@@ -38,8 +38,7 @@ data = data.replace({False: 0, True: 1})
 # print(data)
 
 # Define features (x) and labels (y)
-features = np.array(data[["url_length", "subdomain_len_ratio", "pathcomp_len_ratio", "period_count", "percent_count", "dash_count", "atsign_count", 
-                "ampersand_count", "equal_count", "hashsign_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting"]])
+features = np.array(data[["has_bad_form", "asks_username_email", "asks_password", "asks_phone", "asks_birthday", "asks_card_info", "asks_ssn", "has_bad_action", "nil_anchors"]])
 labels = np.array(data["result"])
 test = np.array(data)
 # print(features)
@@ -102,7 +101,7 @@ print(metrics.accuracy_score(y_test, predictions))
 ### PRINT ACC OF ALL MODELS ###
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 print("Printing current acc of all models")
-for model_name in ["url_model_LR.pickle", "url_model_SVM.pickle", "url_model_KNN.pickle", "url_model_RF.pickle"]:
+for model_name in ["htmldom_model_LR.pickle", "htmldom_model_SVM.pickle", "htmldom_model_KNN.pickle", "htmldom_model_RF.pickle"]:
     saved_model = open(model_name, "rb")
     model = pickle.load(saved_model)
     predictions = model.predict(x_test)
