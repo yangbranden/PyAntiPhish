@@ -23,7 +23,6 @@ import os
 import socket
 from urllib.parse import urlparse
 import pickle
-import numpy as np
 import random
 import tldextract
 from fuzzywuzzy import fuzz
@@ -389,20 +388,58 @@ def predict_url(url, model_selector):
     has_tls = 1 if tls_status(url) else 0
     typosquatting = 1 if is_typosquatting(url) else 0
     
-    target_url_data = np.array([[
+    target_url_data = [[
         url_length, subdomain_len_ratio, pathcomp_len_ratio, period_count, percent_count, dash_count, atsign_count, 
         ampersand_count, equal_count, hashsign_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
-    ]])
+    ]]
     
     print(target_url_data)
     
     prediction = model.predict(target_url_data)
     print(prediction, type(prediction))
     print(f"The model predicted {url} to be {prediction[0]}.")
+    
+    json_format = {
+        "model_selector": model_selector,
+        "url_length": url_length, 
+        "subdomain_len_ratio": subdomain_len_ratio, 
+        "pathcomp_len_ratio": pathcomp_len_ratio, 
+        "period_count": period_count, 
+        "percent_count": percent_count, 
+        "dash_count": dash_count, 
+        "atsign_count": atsign_count, 
+        "ampersand_count": ampersand_count, 
+        "equal_count": equal_count, 
+        "hashsign_count": hashsign_count, 
+        "has_bad_tld": has_bad_tld, 
+        "has_bad_tld_location": has_bad_tld_location, 
+        "has_raw_ip": has_raw_ip, 
+        "has_tls": has_tls, 
+        "typosquatting": typosquatting,
+        "prediction": prediction[0]
+    }
+    
+    return json_format
+
+def lambda_handler(website_url, lambda_context):
+    model_LR = predict_url(website_url, 0)
+    model_SVM = predict_url(website_url, 1)
+    model_KNN = predict_url(website_url, 2)
+    model_RF = predict_url(website_url, 3)
+    
+    output = {
+        "model_LR": model_LR,
+        "model_SVM": model_SVM,
+        "model_KNN": model_KNN,
+        "model_RF": model_RF
+    }
+    
+    return output
 
 if __name__ == "__main__":
     # TEST MODEL
     # website_url = input("Enter the website URL: ")
+    website_url = "https://www.google.com"
     
     # print("LR")
     # predict_url(website_url, 0)
@@ -417,8 +454,14 @@ if __name__ == "__main__":
     # predict_url(website_url, 3)
     # print()
     
+    test = lambda_handler("https://www.google.com")
+    print(test['model_LR'])
+    print(test['model_SVM'])
+    print(test['model_KNN'])
+    print(test['model_RF'])
+    
     # ADD DATA FROM FILE; using the extract_from_file function I made so that it is easy to create specific splits of data (and add more/less as needed)
-    extract_from_file(source_csv="./raw_url_data/balanced_urls.csv", url_index=0, result_index=1, output_csv="url_data.csv", max_rows=5000, num_benign=100, num_phishing=0)
-    extract_from_file(source_csv="./raw_url_data/malicious_phish.csv", url_index=0, result_index=1, output_csv="url_data.csv", max_rows=5000, num_benign=100, num_phishing=0)
-    extract_from_file(source_csv="./raw_url_data/urldata.csv", url_index=1, result_index=2, output_csv="url_data.csv", max_rows=5000, num_benign=100, num_phishing=0)
-    extract_from_file(source_csv="./raw_url_data/online-valid.csv", url_index=1, result_index=4, output_csv="url_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
+    # extract_from_file(source_csv="./raw_url_data/balanced_urls.csv", url_index=0, result_index=1, output_csv="url_data.csv", max_rows=5000, num_benign=100, num_phishing=0)
+    # extract_from_file(source_csv="./raw_url_data/malicious_phish.csv", url_index=0, result_index=1, output_csv="url_data.csv", max_rows=5000, num_benign=100, num_phishing=0)
+    # extract_from_file(source_csv="./raw_url_data/urldata.csv", url_index=1, result_index=2, output_csv="url_data.csv", max_rows=5000, num_benign=100, num_phishing=0)
+    # extract_from_file(source_csv="./raw_url_data/online-valid.csv", url_index=1, result_index=4, output_csv="url_data.csv", max_rows=5000, num_benign=0, num_phishing=100)
