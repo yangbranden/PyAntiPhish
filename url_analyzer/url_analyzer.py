@@ -421,7 +421,14 @@ def predict_url(url, model_selector):
     
     return json_format
 
-def lambda_handler(website_url, lambda_context):
+# AWS Lambda handler function
+# Input format:
+# {
+#   "url": "https://www.google.com"
+# }
+def lambda_handler(json_input, lambda_context):
+    website_url = json_input['url']
+    
     model_LR = predict_url(website_url, 0)
     model_SVM = predict_url(website_url, 1)
     model_KNN = predict_url(website_url, 2)
@@ -454,7 +461,10 @@ if __name__ == "__main__":
     # predict_url(website_url, 3)
     # print()
     
-    test = lambda_handler("https://www.google.com")
+    input = {
+        "url": "https://www.google.com"
+    }
+    test = lambda_handler(input, None)
     print(test['model_LR'])
     print(test['model_SVM'])
     print(test['model_KNN'])
