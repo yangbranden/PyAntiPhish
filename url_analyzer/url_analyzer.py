@@ -426,7 +426,6 @@ def predict_url(url, model_selector):
 # {
 #   "url": "https://www.google.com"
 # }
-# @functions_framework.http
 def lambda_handler(json_input, lambda_context):
     website_url = json_input['url']
     

@@ -1,0 +1,4 @@
+tldextract
+fuzzywuzzy
+python-Levenshtein
+scikit-learn
