@@ -393,14 +393,15 @@ def predict_url(url, model_selector):
         ampersand_count, equal_count, hashsign_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
     ]]
     
-    print(target_url_data)
+    # print(target_url_data)
     
     prediction = model.predict(target_url_data)
-    print(prediction, type(prediction))
-    print(f"The model predicted {url} to be {prediction[0]}.")
+    # print(prediction, type(prediction))
+    # print(f"The model predicted {url} to be {prediction[0]}.")
     
     json_format = {
         "model_selector": model_selector,
+        "model_name": model_name,
         "url_length": url_length, 
         "subdomain_len_ratio": subdomain_len_ratio, 
         "pathcomp_len_ratio": pathcomp_len_ratio, 
