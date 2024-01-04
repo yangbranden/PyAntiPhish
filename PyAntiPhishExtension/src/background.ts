@@ -2,7 +2,7 @@ let active = false;
 let test = "https://twitter.com/";
 let blockedURL: string | undefined = undefined;
 let whitelisted: string[] = [];
-const apiEndpointURL = "https://1gwj7xzaqb.execute-api.us-east-1.amazonaws.com/default/PyAntiPhish_URL_Analyzer"
+const apiEndpointURL = "https://mwo0rju1el.execute-api.us-east-1.amazonaws.com/pyantiphish/url_analyzer"
 
 function blockPage(url?: string | undefined) {
     console.log("Blocking page");
@@ -14,10 +14,7 @@ async function urlAnalyzer(url: string) {
     try {
 		const response = await fetch(apiEndpointURL, {
 			method: 'POST',
-			body: JSON.stringify({ url }),
-            headers: {
-                "Access-Control-Allow-Origin": apiEndpointURL
-            }
+			body: JSON.stringify({ url })
 		});
 
 		console.log('Response from Lambda:', response);
