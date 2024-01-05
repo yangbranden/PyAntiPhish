@@ -10,7 +10,8 @@
       "tabs"
    ],
    "host_permissions": [
-      "*://*/*"
+      "*://*/*",
+      "https://mwo0rju1el.execute-api.us-east-1.amazonaws.com/pyantiphish/url_analyzer"
    ],
    "web_accessible_resources": [
       {

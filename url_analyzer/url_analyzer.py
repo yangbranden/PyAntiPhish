@@ -26,6 +26,7 @@ import pickle
 import random
 import tldextract
 from fuzzywuzzy import fuzz
+import json
 
 # Define good TLDs to check
 good_tlds = ["com", "org", "net", "edu", "gov", "co", "uk", "eu", "ca", "de", "br", "jp"]
@@ -441,6 +442,15 @@ def lambda_handler(json_input, lambda_context):
         "model_KNN": model_KNN,
         "model_RF": model_RF
     }
+    
+    # response = {
+    #     'statusCode': 200,
+    #     'headers': {
+    #         'Access-Control-Allow-Origin': website_url,
+    #         'Content-Type': 'application/json'
+    #     },
+    #     'body': json.dumps({'output': output})
+    # }
     
     return output
 

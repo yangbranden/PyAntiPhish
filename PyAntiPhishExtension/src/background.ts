@@ -10,28 +10,26 @@ function blockPage(url?: string | undefined) {
     window.location.href = chrome.runtime.getURL('./block.html');
 }
 
-async function urlAnalyzer(url: string) {
-    try {
-		const response = await fetch(apiEndpointURL, {
-			method: 'POST',
-			body: JSON.stringify({ url })
-		});
+function urlAnalyzer(url: string) {
+    console.log("Calling API...")
 
-		console.log('Response from Lambda:', response);
-
-		if (!response.ok) {
-			return new Response(null, {
-				status: 500,
-				statusText: 'Internal Server Error - Response not OK',
-			});
+    window.fetch(apiEndpointURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: url })
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-	} catch (error) {
-		console.error('There was a problem with the fetch operation:', error);
-		return new Response(null, {
-			status: 500,
-			statusText: 'Internal Server Error - Fetch Error',
-		});
-	}
+        console.log('Response from Lambda:', response);
+        return response.json();
+    }).then(data => {
+        console.log('Response from server:', data);
+    }).catch(error => {
+        console.error('Error during fetch:', error);
+    });
 }
 
 function changeBGColor(color: string, test?: any): void {
