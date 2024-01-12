@@ -443,16 +443,16 @@ def lambda_handler(json_input, lambda_context):
         "model_RF": model_RF
     }
     
-    # response = {
-    #     'statusCode': 200,
-    #     'headers': {
-    #         'Access-Control-Allow-Origin': website_url,
-    #         'Content-Type': 'application/json'
-    #     },
-    #     'body': json.dumps({'output': output})
-    # }
+    response = {
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+        },
+        'body': json.dumps({'output': output})
+    }
     
-    return output
+    return response
 
 if __name__ == "__main__":
     # TEST MODEL

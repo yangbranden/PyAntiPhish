@@ -10,26 +10,31 @@ function blockPage(url?: string | undefined) {
     window.location.href = chrome.runtime.getURL('./block.html');
 }
 
-function urlAnalyzer(url: string) {
-    console.log("Calling API...")
+async function urlAnalyzer(url: string) {
+    console.log("Calling API...");
 
-    window.fetch(apiEndpointURL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ url: url })
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+    try {
+        const response = await window.fetch(apiEndpointURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Origin': url
+            },
+            body: JSON.stringify({ url: url })
+        });
+        
+        if (response.status != 200) {
+            throw new Error("Bad API response");
         }
-        console.log('Response from Lambda:', response);
-        return response.json();
-    }).then(data => {
-        console.log('Response from server:', data);
-    }).catch(error => {
-        console.error('Error during fetch:', error);
-    });
+
+        const data = await response.json();
+    
+        console.log("AWS Lambda returned:", data);
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 function changeBGColor(color: string, test?: any): void {

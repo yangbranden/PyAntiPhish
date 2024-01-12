@@ -30,3 +30,5 @@ The `dist` folder contains the extension code
 `npm install --save-dev @types/chrome`
 `npm install --save-dev @types/node`
 
+## Testing Lambda
+`curl -X POST https://mwo0rju1el.execute-api.us-east-1.amazonaws.com/pyantiphish/url_analyzer -d '{"url": "https://www.google.com"}'`
