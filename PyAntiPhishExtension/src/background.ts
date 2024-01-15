@@ -10,15 +10,15 @@ function blockPage(url?: string | undefined) {
     window.location.href = chrome.runtime.getURL('./block.html');
 }
 
-async function urlAnalyzer(url: string) {
-    console.log("Calling API...");
+async function urlAnalyzer(url?: string | undefined) {
+    console.log("URL:", url, "Calling API...");
 
     try {
         const response = await window.fetch(apiEndpointURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Origin': url
+                'Origin': url ?? ""
             },
             body: JSON.stringify({ url: url })
         });
@@ -30,8 +30,39 @@ async function urlAnalyzer(url: string) {
         const data = await response.json();
     
         console.log("AWS Lambda returned:", data);
+        
+        const body = data['body'];
+        const output = JSON.parse(body)['output'];
+        console.log("Parsed JSON:", output);
 
-        return data;
+        const model_LR_pred = output['model_LR']['prediction'];
+        const model_SVM_pred = output['model_SVM']['prediction'];
+        const model_KNN_pred = output['model_KNN']['prediction'];
+        const model_RF_pred = output['model_RF']['prediction'];
+        console.log("model_LR:", model_LR_pred)
+        console.log("model_SVM:", model_SVM_pred)
+        console.log("model_KNN:", model_KNN_pred)
+        console.log("model_RF:", model_RF_pred)
+
+        // TODO: figure out what criteria we are using to determine whether or not a page is b
+        let count = 0;
+        if (model_LR_pred === 'phishing') {
+            count += 1;
+        }
+        if (model_SVM_pred === 'phishing') {
+            count += 1;
+        }
+        if (model_KNN_pred === 'phishing') {
+            count += 1;
+        }
+        if (model_RF_pred === 'phishing') {
+            count += 1;
+        }
+        if (count >= 3) {
+            window.location.href = chrome.runtime.getURL('./block.html');
+        }
+
+        return output;
     } catch (e) {
         console.error(e);
     }
@@ -50,7 +81,7 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.scripting.executeScript({
         target: {tabId: tab.id ?? -1},
         func: urlAnalyzer,
-        args: ["https://www.google.com"]
+        args: [tab.url]
     }).then();
 });
 
