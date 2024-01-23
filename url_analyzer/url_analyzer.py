@@ -150,11 +150,11 @@ def predict_url(url, model_selector):
         ampersand_count, equal_count, hashsign_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
     ]]
     
-    # print(target_url_data)
+    print(target_url_data)
     
     prediction = model.predict(target_url_data)
-    # print(prediction, type(prediction))
-    # print(f"The model predicted {url} to be {prediction[0]}.")
+    print(prediction, type(prediction))
+    print(f"The model predicted {url} to be {prediction[0]}.")
     
     json_format = {
         "model_selector": model_selector,
@@ -213,20 +213,20 @@ def lambda_handler(json_input, lambda_context):
 if __name__ == "__main__":
     # TEST MODEL
     # website_url = input("Enter the website URL: ")
-    # website_url = "https://www.google.com"
+    website_url = "https://www.google.com/"
     
-    # print("LR")
-    # predict_url(website_url, 0)
-    # print()
-    # print("SVM")
-    # predict_url(website_url, 1)
-    # print()
-    # print("KNN")
-    # predict_url(website_url, 2)
-    # print()
-    # print("RF")
-    # predict_url(website_url, 3)
-    # print()
+    print("LR")
+    predict_url(website_url, 0)
+    print()
+    print("SVM")
+    predict_url(website_url, 1)
+    print()
+    print("KNN")
+    predict_url(website_url, 2)
+    print()
+    print("RF")
+    predict_url(website_url, 3)
+    print()
     
     # input = {
     #     "url": "https://www.google.com"
@@ -238,4 +238,4 @@ if __name__ == "__main__":
     # print(test['model_RF'])
     
     # ADD DATA FROM FILE; using the extract_from_file function I made so that it is easy to create specific splits of data (and add more/less as needed)
-    extract_from_file(source_csv="raw_url_data.csv", url_index=0, result_index=1, output_csv="url_data.csv")
+    # extract_from_file(source_csv="./raw_url_data/raw_url_data.csv", url_index=0, result_index=1, output_csv="url_data.csv")
