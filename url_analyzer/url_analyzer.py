@@ -27,6 +27,7 @@ import tldextract
 from fuzzywuzzy import fuzz
 import json
 
+# Import feature extraction functions from url_features folder
 from url_features.url_len import get_url_len
 from url_features.subdomain_len_ratio import get_subdomain_len_ratio
 from url_features.pathcomp_len_ratio import get_pathcomp_len_ratio
