@@ -86,7 +86,6 @@ def is_typosquatting(url):
         url = '//' + url
 
     # Get domain name (exclude scheme, path, and other parts of URL)
-    print(tldextract.extract(url))
     domain = tldextract.extract(url).domain
     
     # Compare domain with whitelisted domains
