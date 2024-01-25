@@ -1,5 +1,4 @@
 import tldextract
-from urllib.parse import urlparse
 
 # Calculates ratio of the length of the subdomain to the length of the netloc (subdomain + domain; excludes scheme)
 def get_subdomain_len_ratio(url):
