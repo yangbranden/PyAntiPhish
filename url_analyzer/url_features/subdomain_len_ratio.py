@@ -26,7 +26,6 @@ def get_subdomain_len_ratio(url):
     
     total = parsed.netloc + pathcomp
     
-    print(total)
     ratio = len(subdomain) / len(total)
     
     return ratio

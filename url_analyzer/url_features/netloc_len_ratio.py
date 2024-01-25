@@ -29,7 +29,6 @@ def get_netloc_len_ratio(url):
     netloc = parsed.netloc
     total = parsed.netloc + pathcomp
     
-    print(total)
     ratio = len(netloc) / len(total)
     
     return ratio

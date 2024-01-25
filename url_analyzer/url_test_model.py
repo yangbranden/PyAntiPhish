@@ -1,35 +1,17 @@
 #!/usr/bin/python3
 
-# URL-based features:
-#  1. Length of domain to length of netloc (domain + subdomain)
-#  2. Length of subdomain to length of netloc (domain + subdomain)
-#  3. Length of path components to length of URL
-#  Frequency of suspicious characters
-#  4. ‘.’ count
-#  5. ‘%’ count
-#  6. ‘-’ count
-#  7. ‘@’ count
-#  8. ‘&’ count
-#  9. ‘=’ count
-# 10. ‘#’ count
-# 11. Non-standard TLD in standard location
-# 12. Standard TLD in non-standard location
-# 13. Raw IP as URL
-# 14. HTTPS (TLS) status
-# 15. Levenshtein distance to URLs in whitelist
-
 import csv
 import os
-import socket
 from urllib.parse import urlparse
 import pickle
-import tldextract
-from fuzzywuzzy import fuzz
-import json
 
 # Import feature extraction functions from url_features folder
 from url_features.url_len import get_url_len
+from url_features.subdomain_len import get_subdomain_len
 from url_features.subdomain_len_ratio import get_subdomain_len_ratio
+from url_features.netloc_len import get_netloc_len
+from url_features.netloc_len_ratio import get_netloc_len_ratio
+from url_features.pathcomp_len import get_pathcomp_len
 from url_features.pathcomp_len_ratio import get_pathcomp_len_ratio
 from url_features.count_char import count_char
 from url_features.bad_tld import bad_tld
@@ -179,37 +161,6 @@ def predict_url(url, model_selector):
     }
     
     return json_format
-
-# AWS Lambda handler function
-# Input format:
-# {
-#   "url": "https://www.google.com"
-# }
-def lambda_handler(json_input, lambda_context):
-    website_url = json_input['url']
-    
-    model_LR = predict_url(website_url, 0)
-    model_SVM = predict_url(website_url, 1)
-    model_KNN = predict_url(website_url, 2)
-    model_RF = predict_url(website_url, 3)
-    
-    output = {
-        "model_LR": model_LR,
-        "model_SVM": model_SVM,
-        "model_KNN": model_KNN,
-        "model_RF": model_RF
-    }
-    
-    response = {
-        'statusCode': 200,
-        'headers': {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-        },
-        'body': json.dumps({'output': output})
-    }
-    
-    return response
 
 if __name__ == "__main__":
     # TEST MODEL
