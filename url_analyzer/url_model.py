@@ -13,8 +13,8 @@ import os
 
 # CONSTANTS
 train = True
-iterations = 10
-model_selector = 3
+iterations = 1
+model_selector = 0
 
 LR_max_iter = 3000
 KNN_n_neighbors = 11

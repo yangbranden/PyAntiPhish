@@ -1,8 +1,8 @@
 from urllib.parse import urlparse
 
-# Calculates the number of characters in the URL's netloc.
+# Calculates the number of characters in the URL's netloc (subdomain + domain).
 def get_netloc_len(url):
-    """Calculates the number of characters in the URL's netloc.
+    """Calculates the number of characters in the URL's netloc (subdomain + domain).
 
     Args:
         url (string): The URL to be analyzed.

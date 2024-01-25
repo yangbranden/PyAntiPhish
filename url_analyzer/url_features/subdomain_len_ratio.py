@@ -1,23 +1,32 @@
 import tldextract
+from urllib.parse import urlparse
 
-# Calculates ratio of the length of the subdomain to length of the netloc (domain + subdomain; excludes scheme)
+# Calculates ratio of the length of the subdomain to the total length of the URL (excludes scheme)
 def get_subdomain_len_ratio(url):
-    """Calculates ratio of the length of the subdomain to length of the netloc (domain + subdomain; excludes scheme)
+    """Calculates ratio of the length of the subdomain to the total length of the URL (excludes scheme)
 
     Args:
         url (string): The URL to be analyzed. Inclusion of URL scheme is not taken into account.
 
     Returns:
-        ratio (float): Length of the subdomain divided by the length of the netloc (domain + subdomain).
+        ratio (float): Length of the subdomain divided by the length of the URL (excludes scheme).
     """
     extracted = tldextract.extract(url)
     
     subdomain = extracted.subdomain
-    if extracted.subdomain == '':
-        netloc = extracted.domain + '.' + extracted.suffix
-    else:
-        netloc = extracted.subdomain + '.' + extracted.domain + '.' + extracted.suffix
     
-    ratio = len(subdomain) / len(netloc)
+    parsed = urlparse(url)
+    pathcomp = parsed.path
+    if parsed.params: # params are rarely used
+        pathcomp += ';' + parsed.params
+    if parsed.query:
+        pathcomp += '?' + parsed.query
+    if parsed.fragment:
+        pathcomp += '#' + parsed.fragment
+    
+    total = parsed.netloc + pathcomp
+    
+    print(total)
+    ratio = len(subdomain) / len(total)
     
     return ratio

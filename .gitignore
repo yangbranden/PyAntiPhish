@@ -1,5 +1,6 @@
 raw_htmldom_data/
 .env
+test.py
 test.ipynb
 notes.txt
 raw_htmldom_data.zip
