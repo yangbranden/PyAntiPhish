@@ -30,7 +30,7 @@ elif model_selector == 3: # Random Forest
     model_name = "htmldom_model_RF.pickle"
 
 ### IMPORT & PREPROCESS DATA ###
-data = pd.read_csv("htmldom_data.csv", encoding='latin')
+data = pd.read_csv("htmldom_data.csv", encoding='latin-1')
 
 # False --> 0, True --> 1
 data = data.replace({False: 0, True: 1})

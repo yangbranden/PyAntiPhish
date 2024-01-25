@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # Current features:
 #  1. Length of domain to length of netloc (domain + subdomain)

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import csv
 import os
@@ -26,18 +26,6 @@ from url_features.is_typosquatting import is_typosquatting
 # Extract features and write to output CSV
 def extract_features(filename, url, result):
     file_exists = os.path.exists(filename)
-
-    # Read file if exists
-    if file_exists:
-        with open(filename, 'r', newline='') as f:
-            reader = csv.reader(f)
-            
-            # Only append row if url doesn't already exist
-            for row in reader:
-                website_url = row[0]
-                if website_url == url:
-                    print(f"URL {url} already found; skipping.")
-                    return False
     
     # Open file as append (creates file if doesn't exist)
     with open(filename, 'a', newline='') as f:
@@ -149,7 +137,7 @@ def extract_features(filename, url, result):
 
 # Get results from existing datasets (add entire csv)
 def extract_from_file(source_csv, url_index, result_index, output_csv):
-    with open(source_csv, 'r', newline='', encoding='utf-8') as f:
+    with open(source_csv, 'r', newline='', encoding='latin-1') as f:
         csv_reader = csv.reader(f)
         for row in csv_reader:
             result = row[result_index]

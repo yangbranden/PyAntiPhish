@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import csv
 import random
@@ -30,7 +32,7 @@ def extract_from_file(source_csv, url_index, result_index, output_csv, max_rows,
         count = 0
     target_count = count + max_rows
     while count < target_count:
-        with open(source_csv, 'r', newline='', encoding='utf-8') as f:
+        with open(source_csv, 'r', newline='', encoding='latin-1') as f:
             csv_reader = csv.reader(f)
             rows = list(csv_reader)
             

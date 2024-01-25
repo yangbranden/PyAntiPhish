@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -21,16 +21,16 @@ KNN_n_neighbors = 11
 RF_n_estimators = 100
 
 if model_selector == 0: # Logistic Regression
-    model_name = "url_model_LR.pickle"
+    model_name = "url1_model_LR.pickle"
 elif model_selector == 1: # SVM
-    model_name = "url_model_SVM.pickle"
+    model_name = "url1_model_SVM.pickle"
 elif model_selector == 2: # KNN
-    model_name = "url_model_KNN.pickle"
+    model_name = "url1_model_KNN.pickle"
 elif model_selector == 3: # Random Forest
-    model_name = "url_model_RF.pickle"
+    model_name = "url1_model_RF.pickle"
 
 ### IMPORT & PREPROCESS DATA ###
-data = pd.read_csv("url_data.csv", encoding='latin')
+data = pd.read_csv("url_data.csv", encoding='latin-1')
 
 # False --> 0, True --> 1
 data = data.replace({False: 0, True: 1})
@@ -38,10 +38,11 @@ data = data.replace({False: 0, True: 1})
 # print(data)
 
 # Define features (x) and labels (y)
-features = np.array(data[["url_length", "subdomain_len_ratio", "pathcomp_len_ratio", "period_count", "percent_count", "dash_count", "atsign_count", 
-                "ampersand_count", "equal_count", "hashsign_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting"]])
+features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", 
+                "period_count", "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", 
+                "equal_count", "underscore_count", "plus_count", "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", 
+                "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting"]])
 labels = np.array(data["result"])
-test = np.array(data)
 # print(features)
 # print(labels)
 
@@ -102,7 +103,7 @@ print(metrics.accuracy_score(y_test, predictions))
 ### PRINT ACC OF ALL MODELS ###
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 print("Printing current acc of all models")
-for model_name in ["url_model_LR.pickle", "url_model_SVM.pickle", "url_model_KNN.pickle", "url_model_RF.pickle"]:
+for model_name in ["url1_model_LR.pickle", "url1_model_SVM.pickle", "url1_model_KNN.pickle", "url1_model_RF.pickle"]:
     saved_model = open(model_name, "rb")
     model = pickle.load(saved_model)
     predictions = model.predict(x_test)

@@ -9,10 +9,10 @@ sudo dnf install python3.11 -y
 sudo dnf install python3.11-pip -y
 ```
 
-2. Compile the required Python 3.11 modules on an Amazon Linux EC2 instance
+2. Compile the required Python 3.11 modules on an Amazon Linux EC2 instance (copy the `requirements.txt` file)
 ```
 mkdir package/
-pip install --target ./package scikit-learn tldextract fuzzywuzzy python-Levenshtein
+pip install --target ./package -r requirements.txt
 ```
 
 3. Compress/remove unnecessary files from the modules so that the package zip is small enough for lambda
