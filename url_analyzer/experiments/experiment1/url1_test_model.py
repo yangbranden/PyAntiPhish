@@ -31,9 +31,8 @@ def calculate_metrics():
     print("\n### EXPERIMENT # ###\n\n")
     data = pd.read_csv("url1_data.csv", encoding='latin-1')
     features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-                "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-                "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-                "has_tls", "typosquatting"]])
+            "slash_count", "percent_count", "dash_count", "question_count", "ampersand_count", "equal_count", "underscore_count", "plus_count", "colon_count", "semicolon_count", 
+            "has_bad_tld", "has_tls"]])
     labels = np.array(data["result"])
     x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
     for model_name in ["url1_model_LR.pickle", "url1_model_SVM.pickle", "url1_model_KNN.pickle", "url1_model_RF.pickle"]:
@@ -93,28 +92,18 @@ def predict_url(url, model_selector):
     percent_count = count_char(url, '%')
     dash_count = count_char(url, '-')
     question_count = count_char(url, '?')
-    atsign_count = count_char(url, '@')
     ampersand_count = count_char(url, '&')
-    hashsign_count = count_char(url, '#')
     equal_count = count_char(url, '=')
     underscore_count = count_char(url, '_')
     plus_count = count_char(url, '+')
     colon_count = count_char(url, ':')
     semicolon_count = count_char(url, ';')
-    comma_count = count_char(url, ',')
-    exclamation_count = count_char(url, '!')
-    tilde_count = count_char(url, '~')
-    dollar_count = count_char(url, '$')
     has_bad_tld = 1 if bad_tld(url) else 0
-    has_bad_tld_location = 1 if bad_tld_location(url) else 0
-    has_raw_ip = 1 if raw_ip_as_url(url) else 0
     has_tls = 1 if tls_status(url) else 0
-    typosquatting = 1 if is_typosquatting(url) else 0
     
     target_url_data = [[
         url_length, subdomain_len, subdomain_len_ratio, netloc_len, netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, period_count, slash_count,
-        percent_count, dash_count, question_count, atsign_count, ampersand_count, hashsign_count, equal_count, underscore_count, plus_count, colon_count,
-        semicolon_count, comma_count, exclamation_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
+        percent_count, dash_count, question_count, ampersand_count, equal_count, underscore_count, plus_count, colon_count, semicolon_count, has_bad_tld, has_tls
     ]]
     
     print(target_url_data)

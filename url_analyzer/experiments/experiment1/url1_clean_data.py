@@ -46,23 +46,14 @@ def extract_features(filename, url, result):
                 "percent_count", 
                 "dash_count", 
                 "question_count", 
-                "atsign_count", 
                 "ampersand_count", 
-                "hashsign_count", 
                 "equal_count", 
                 "underscore_count", 
                 "plus_count", 
                 "colon_count", 
                 "semicolon_count", 
-                "comma_count", 
-                "exclamation_count", 
-                "tilde_count", 
-                "dollar_count", 
                 "has_bad_tld", 
-                "has_bad_tld_location", 
-                "has_raw_ip", 
                 "has_tls", 
-                "typosquatting", 
                 "result"
             ])
 
@@ -78,23 +69,14 @@ def extract_features(filename, url, result):
         percent_count = count_char(url, '%')
         dash_count = count_char(url, '-')
         question_count = count_char(url, '?')
-        atsign_count = count_char(url, '@')
         ampersand_count = count_char(url, '&')
-        hashsign_count = count_char(url, '#')
         equal_count = count_char(url, '=')
         underscore_count = count_char(url, '_')
         plus_count = count_char(url, '+')
         colon_count = count_char(url, ':')
         semicolon_count = count_char(url, ';')
-        comma_count = count_char(url, ',')
-        exclamation_count = count_char(url, '!')
-        tilde_count = count_char(url, '~')
-        dollar_count = count_char(url, '$')
         has_bad_tld = bad_tld(url) 
-        has_bad_tld_location = bad_tld_location(url)
-        has_raw_ip = raw_ip_as_url(url)
         has_tls = tls_status(url)
-        typosquatting = is_typosquatting(url)
         
         row = [
             url, 
@@ -110,23 +92,14 @@ def extract_features(filename, url, result):
             percent_count,
             dash_count,
             question_count,
-            atsign_count,
             ampersand_count,
-            hashsign_count,
             equal_count,
             underscore_count,
             plus_count,
             colon_count,
             semicolon_count,
-            comma_count,
-            exclamation_count,
-            tilde_count,
-            dollar_count,
             has_bad_tld, 
-            has_bad_tld_location,
-            has_raw_ip,
             has_tls,
-            typosquatting, 
             result
         ]
 

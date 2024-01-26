@@ -36,7 +36,7 @@ def calculate_metrics():
                 "has_tls", "typosquatting"]])
     labels = np.array(data["result"])
     x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
-    for model_name in ["url1_model_LR.pickle", "url1_model_SVM.pickle", "url1_model_KNN.pickle", "url1_model_RF.pickle"]:
+    for model_name in ["url0_model_LR.pickle", "url0_model_SVM.pickle", "url0_model_KNN.pickle", "url0_model_RF.pickle"]:
         saved_model = open(model_name, "rb")
         model = pickle.load(saved_model)
         predictions = model.predict(x_test)
