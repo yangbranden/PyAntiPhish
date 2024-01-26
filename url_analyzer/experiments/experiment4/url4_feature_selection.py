@@ -22,14 +22,14 @@ y = data.iloc[:,-1] # target column
 
 ### 4 - Backward-SequentialFeatureSelector for each model ###
 if model_selector == 0:
-    model = LogisticRegression(max_iter=LR_max_iter)
+    model = LogisticRegression(max_iter=LR_max_iter, verbose=1)
 elif model_selector == 1:
-    model = SVC(kernel="linear")
+    model = SVC(kernel="linear", verbose=True)
 elif model_selector == 2:
     model = KNeighborsClassifier(n_neighbors=KNN_k_neighbors) # play around with k value
 elif model_selector == 3:
-    model = RandomForestClassifier(n_estimators=RF_n_estimators) # play around with number of trees
-sel = SequentialFeatureSelector(model, scoring='accuracy', direction='backward')
+    model = RandomForestClassifier(n_estimators=RF_n_estimators, verbose=1) # play around with number of trees
+sel = SequentialFeatureSelector(model, n_features_to_select='auto', scoring='accuracy', direction='backward')
 sel.fit(X,y)
 selected_features = sel.get_support()
 

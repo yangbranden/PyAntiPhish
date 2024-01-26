@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SequentialFeatureSelector
 
-model_selector = 1
+model_selector = 0
 
 LR_max_iter = 3000
 KNN_k_neighbors = 7
@@ -22,18 +22,19 @@ y = data.iloc[:,-1] # target column
 
 ### 3 - Forward-SequentialFeatureSelector for each model ###
 if model_selector == 0:
-    model = LogisticRegression(max_iter=LR_max_iter)
+    model = LogisticRegression(max_iter=LR_max_iter, verbose=1)
     column_title = "Selected by Forward-SFS (LR)"
 elif model_selector == 1:
-    model = SVC(kernel="linear")
+    model = SVC(kernel="linear", verbose=True)
     column_title = "Selected by Forward-SFS (SVM)"
 elif model_selector == 2:
     model = KNeighborsClassifier(n_neighbors=KNN_k_neighbors) # play around with k value
     column_title = "Selected by Forward-SFS (KNN)"
 elif model_selector == 3:
-    model = RandomForestClassifier(n_estimators=RF_n_estimators) # play around with number of trees
+    model = RandomForestClassifier(n_estimators=RF_n_estimators, verbose=1) # play around with number of trees
     column_title = "Selected by Forward-SFS (RF)"
-sel = SequentialFeatureSelector(model, scoring='accuracy', direction='forward')
+
+sel = SequentialFeatureSelector(model, n_features_to_select='auto', scoring='accuracy', direction='forward')
 sel.fit(X,y)
 selected_features = sel.get_support()
 
