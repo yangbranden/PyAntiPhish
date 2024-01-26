@@ -156,4 +156,4 @@ def extract_from_file(source_csv, url_index, result_index, output_csv):
 
 if __name__ == "__main__":
     # ADD DATA FROM FILE; using the extract_from_file function I made so that it is easy to create specific splits of data (and add more/less as needed)
-    extract_from_file(source_csv="../../raw_url_data/raw_url_data.csv", url_index=0, result_index=1, output_csv="url1_data.csv")
+    extract_from_file(source_csv="../../raw_url_data/raw_url_data.csv", url_index=0, result_index=1, output_csv="url0_data.csv")

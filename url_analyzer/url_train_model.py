@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -12,7 +13,7 @@ import pickle
 import os
 
 # CONSTANTS
-train = True
+train = False
 iterations = 100
 model_selector = 3
 
@@ -92,18 +93,33 @@ else:
     model = pickle.load(saved_model)
 
 ### USE MODEL (PREDICT) ###
-predictions = model.predict(x_test)
+# predictions = model.predict(x_test)
 # for i in range(len(predictions)):
 #     print(f"Predicted: {predictions[i]:8} | Actual: {y_test[i]:8} | Data: {x_test[i]}")
-print(metrics.accuracy_score(y_test, predictions))
 
-### PRINT ACC OF ALL MODELS ###
+### COMPUTE METRICS FOR EACH MODEL ###
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 print("Printing current acc of all models")
 for model_name in ["url_model_LR.pickle", "url_model_SVM.pickle", "url_model_KNN.pickle", "url_model_RF.pickle"]:
     saved_model = open(model_name, "rb")
     model = pickle.load(saved_model)
     predictions = model.predict(x_test)
+    
+    accuracy = metrics.accuracy_score(y_test, predictions)
+    precision = metrics.precision_score(y_test, predictions, pos_label="phishing")
+    recall = metrics.recall_score(y_test, predictions, pos_label="phishing")
+    f1_score = metrics.f1_score(y_test, predictions, pos_label="phishing")
+    tn, fp, fn, tp = metrics.confusion_matrix(y_test, predictions).ravel()
     print(model_name)
-    print("Accuracy:", metrics.accuracy_score(y_test, predictions))
+    print("Accuracy:", accuracy)
+    print("Precision:", precision, (tp / (tp + fp)))
+    print("Recall:", recall, (tp / (tp + fn)))
+    print("F1 score:", f1_score, (2 * tp / (2 * tp + fn + fp)))
+    print("False Positive Rate:", (fp / (fp + tn)))
+    print("False Negative Rate:", (fn / (fn + tp)))
+    
+    # cm = metrics.confusion_matrix(y_test, predictions)
+    # disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
+    # disp.plot()
+    # plt.show()
     print()

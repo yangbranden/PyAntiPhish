@@ -20,16 +20,16 @@ KNN_k_neighbors = 7
 RF_n_estimators = 100
 
 if model_selector == 0: # Logistic Regression
-    model_name = "url1_model_LR.pickle"
+    model_name = "url0_model_LR.pickle"
 elif model_selector == 1: # Support Vector Machine
-    model_name = "url1_model_SVM.pickle"
+    model_name = "url0_model_SVM.pickle"
 elif model_selector == 2: # K-Nearest Neighbors
-    model_name = "url1_model_KNN.pickle"
+    model_name = "url0_model_KNN.pickle"
 elif model_selector == 3: # Random Forest
-    model_name = "url1_model_RF.pickle"
+    model_name = "url0_model_RF.pickle"
 
 ### IMPORT & PREPROCESS DATA ###
-data = pd.read_csv("url1_data.csv", encoding='latin-1')
+data = pd.read_csv("url0_data.csv", encoding='latin-1')
 
 # For boolean values: False --> 0, True --> 1
 data = data.replace({False: 0, True: 1})
@@ -88,7 +88,7 @@ for i in range(iterations):
 ### PRINT ACC OF ALL MODELS ###
 print("\n### EXPERIMENT # ###\n\n")
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
-for model_name in ["url1_model_LR.pickle", "url1_model_SVM.pickle", "url1_model_KNN.pickle", "url1_model_RF.pickle"]:
+for model_name in ["url0_model_LR.pickle", "url0_model_SVM.pickle", "url0_model_KNN.pickle", "url0_model_RF.pickle"]:
     saved_model = open(model_name, "rb")
     model = pickle.load(saved_model)
     predictions = model.predict(x_test)
