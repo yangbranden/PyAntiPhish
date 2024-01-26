@@ -9,7 +9,7 @@ data = data.drop(data.columns[0], axis=1) # ignore URL for feature selection pro
 X = data.iloc[:,0:29] # independent columns
 y = data.iloc[:,-1] # target column
 
-### 1 - Variance Threshold of 90% ###
+### 1 - Variance Threshold of 95% ###
 sel = VarianceThreshold(threshold=0.05)
 sel.fit(X)
 should_remove = sel.get_support()
