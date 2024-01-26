@@ -2,6 +2,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+from IPython.display import display
 from sklearn.feature_selection import VarianceThreshold
 
 data = pd.read_csv("../url_all_features.csv", encoding='latin-1')
@@ -20,7 +21,7 @@ for i in range(len(should_remove)):
     output.append([data.columns[i], should_remove[i]])
 
 df = pd.DataFrame(output)
-df.style
+display(df)
 
 # Matplotlib visualization
 fig, ax = plt.subplots()
