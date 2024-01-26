@@ -7,9 +7,6 @@ from sklearn.feature_selection import chi2
 from sklearn.ensemble import ExtraTreesClassifier
 import matplotlib.pyplot as plt
 
-# annoying warning
-pd.set_option('future.no_silent_downcasting', True)
-
 data = pd.read_csv("url_data.csv", encoding='latin-1')
 data = data.drop(data.columns[0], axis=1)
 # print(data)
@@ -28,5 +25,3 @@ y = data.iloc[:,-1]    # target column
 # featureScores = pd.concat([dfcolumns,dfscores],axis=1)
 # featureScores.columns = ['Features','Score']  # naming the dataframe columns
 # print(featureScores.nlargest(14,'Score'))
-
-varthresh = VarianceThreshold(threshold=0)
