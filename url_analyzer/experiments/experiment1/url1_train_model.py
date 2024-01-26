@@ -85,7 +85,7 @@ for i in range(iterations):
     print(iter_update)
 
 ### PRINT ACC OF ALL MODELS ###
-print("\n### EXPERIMENT # ###\n\n")
+print("\n### EXPERIMENT 1 ###\n\n")
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 for model_name in ["url1_model_LR.pickle", "url1_model_SVM.pickle", "url1_model_KNN.pickle", "url1_model_RF.pickle"]:
     saved_model = open(model_name, "rb")

@@ -13,7 +13,7 @@ import os
 
 # CONSTANTS
 iterations = 20
-model_selector = 0
+model_selector = 3
 
 LR_max_iter = 3000
 KNN_k_neighbors = 7
@@ -35,10 +35,9 @@ data = pd.read_csv("url2_data.csv", encoding='latin-1')
 data = data.replace({False: 0, True: 1})
 
 # Define features (x) and labels (y)
-features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-            "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-            "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-            "has_tls", "typosquatting"]])
+features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len_ratio", "percent_count", 
+            "dash_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", "colon_count", "semicolon_count", 
+            "has_bad_tld", "has_raw_ip", "has_tls"]])
 labels = np.array(data["result"])
 # print(features)
 # print(labels)
@@ -86,7 +85,7 @@ for i in range(iterations):
     print(iter_update)
 
 ### PRINT ACC OF ALL MODELS ###
-print("\n### EXPERIMENT # ###\n\n")
+print("\n### EXPERIMENT 2 ###\n\n")
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 for model_name in ["url2_model_LR.pickle", "url2_model_SVM.pickle", "url2_model_KNN.pickle", "url2_model_RF.pickle"]:
     saved_model = open(model_name, "rb")

@@ -13,12 +13,12 @@ y = data.iloc[:,-1] # target column
 ### 1 - Variance Threshold of 95% ###
 sel = VarianceThreshold(threshold=0.05)
 sel.fit(X)
-should_remove = sel.get_support()
+selected_features = sel.get_support()
 
 # Create list to display in table
 output = [["Feature", "Variance greater than 5%"]]
-for i in range(len(should_remove)):
-    output.append([data.columns[i], should_remove[i]])
+for i in range(len(selected_features)):
+    output.append([data.columns[i], selected_features[i]])
 
 df = pd.DataFrame(output)
 display(df)

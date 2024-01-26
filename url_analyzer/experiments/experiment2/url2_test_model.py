@@ -30,10 +30,9 @@ from url_features.is_typosquatting import is_typosquatting
 def calculate_metrics():
     print("\n### EXPERIMENT 2 ###\n\n")
     data = pd.read_csv("url2_data.csv", encoding='latin-1')
-    features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-                "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-                "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-                "has_tls", "typosquatting"]])
+    features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len_ratio", "percent_count", 
+                "dash_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", "colon_count", "semicolon_count", 
+                "has_bad_tld", "has_raw_ip", "has_tls"]])
     labels = np.array(data["result"])
     x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
     for model_name in ["url2_model_LR.pickle", "url2_model_SVM.pickle", "url2_model_KNN.pickle", "url2_model_RF.pickle"]:
@@ -86,13 +85,9 @@ def predict_url(url, model_selector):
     subdomain_len_ratio = get_subdomain_len_ratio(url)
     netloc_len = get_netloc_len(url) 
     netloc_len_ratio = get_netloc_len_ratio(url) 
-    pathcomp_len = get_pathcomp_len(url)
     pathcomp_len_ratio = get_pathcomp_len_ratio(url)
-    period_count = count_char(url, '.')
-    slash_count = count_char(url, '/')
     percent_count = count_char(url, '%')
     dash_count = count_char(url, '-')
-    question_count = count_char(url, '?')
     atsign_count = count_char(url, '@')
     ampersand_count = count_char(url, '&')
     hashsign_count = count_char(url, '#')
@@ -101,20 +96,13 @@ def predict_url(url, model_selector):
     plus_count = count_char(url, '+')
     colon_count = count_char(url, ':')
     semicolon_count = count_char(url, ';')
-    comma_count = count_char(url, ',')
-    exclamation_count = count_char(url, '!')
-    tilde_count = count_char(url, '~')
-    dollar_count = count_char(url, '$')
     has_bad_tld = 1 if bad_tld(url) else 0
-    has_bad_tld_location = 1 if bad_tld_location(url) else 0
     has_raw_ip = 1 if raw_ip_as_url(url) else 0
     has_tls = 1 if tls_status(url) else 0
-    typosquatting = 1 if is_typosquatting(url) else 0
     
     target_url_data = [[
-        url_length, subdomain_len, subdomain_len_ratio, netloc_len, netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, period_count, slash_count,
-        percent_count, dash_count, question_count, atsign_count, ampersand_count, hashsign_count, equal_count, underscore_count, plus_count, colon_count,
-        semicolon_count, comma_count, exclamation_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
+        url_length, subdomain_len, subdomain_len_ratio, netloc_len, netloc_len_ratio, pathcomp_len_ratio, percent_count, dash_count, atsign_count, ampersand_count, 
+        hashsign_count, equal_count, underscore_count, plus_count, colon_count, semicolon_count, has_bad_tld, has_raw_ip, has_tls
     ]]
     
     print(target_url_data)
@@ -123,7 +111,7 @@ def predict_url(url, model_selector):
     print(prediction, type(prediction))
     print(f"The model predicted {url} to be {prediction[0]}.")
 
-    
+
 if __name__ == "__main__":
     # TEST MODEL MANUALLY
     # website_url = input("Enter the website URL: ")

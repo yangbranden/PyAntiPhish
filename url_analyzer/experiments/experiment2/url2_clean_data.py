@@ -39,13 +39,9 @@ def extract_features(filename, url, result):
                 "subdomain_len_ratio", 
                 "netloc_len", 
                 "netloc_len_ratio", 
-                "pathcomp_len", 
                 "pathcomp_len_ratio", 
-                "period_count",
-                "slash_count",
                 "percent_count", 
                 "dash_count", 
-                "question_count", 
                 "atsign_count", 
                 "ampersand_count", 
                 "hashsign_count", 
@@ -54,15 +50,9 @@ def extract_features(filename, url, result):
                 "plus_count", 
                 "colon_count", 
                 "semicolon_count", 
-                "comma_count", 
-                "exclamation_count", 
-                "tilde_count", 
-                "dollar_count", 
                 "has_bad_tld", 
-                "has_bad_tld_location", 
                 "has_raw_ip", 
                 "has_tls", 
-                "typosquatting", 
                 "result"
             ])
 
@@ -71,13 +61,9 @@ def extract_features(filename, url, result):
         subdomain_len_ratio = get_subdomain_len_ratio(url)
         netloc_len = get_netloc_len(url) 
         netloc_len_ratio = get_netloc_len_ratio(url) 
-        pathcomp_len = get_pathcomp_len(url)
         pathcomp_len_ratio = get_pathcomp_len_ratio(url)
-        period_count = count_char(url, '.')
-        slash_count = count_char(url, '/')
         percent_count = count_char(url, '%')
         dash_count = count_char(url, '-')
-        question_count = count_char(url, '?')
         atsign_count = count_char(url, '@')
         ampersand_count = count_char(url, '&')
         hashsign_count = count_char(url, '#')
@@ -86,15 +72,9 @@ def extract_features(filename, url, result):
         plus_count = count_char(url, '+')
         colon_count = count_char(url, ':')
         semicolon_count = count_char(url, ';')
-        comma_count = count_char(url, ',')
-        exclamation_count = count_char(url, '!')
-        tilde_count = count_char(url, '~')
-        dollar_count = count_char(url, '$')
         has_bad_tld = bad_tld(url) 
-        has_bad_tld_location = bad_tld_location(url)
         has_raw_ip = raw_ip_as_url(url)
         has_tls = tls_status(url)
-        typosquatting = is_typosquatting(url)
         
         row = [
             url, 
@@ -103,13 +83,9 @@ def extract_features(filename, url, result):
             subdomain_len_ratio,
             netloc_len,
             netloc_len_ratio,
-            pathcomp_len,
             pathcomp_len_ratio,
-            period_count,
-            slash_count,
             percent_count,
             dash_count,
-            question_count,
             atsign_count,
             ampersand_count,
             hashsign_count,
@@ -118,15 +94,9 @@ def extract_features(filename, url, result):
             plus_count,
             colon_count,
             semicolon_count,
-            comma_count,
-            exclamation_count,
-            tilde_count,
-            dollar_count,
             has_bad_tld, 
-            has_bad_tld_location,
             has_raw_ip,
             has_tls,
-            typosquatting, 
             result
         ]
 
