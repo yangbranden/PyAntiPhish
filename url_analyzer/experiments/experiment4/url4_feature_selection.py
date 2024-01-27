@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from IPython.display import display
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
+from sklearn.svm import LinearSVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SequentialFeatureSelector
@@ -24,7 +24,7 @@ y = data.iloc[:,-1] # target column
 if model_selector == 0:
     model = LogisticRegression(max_iter=LR_max_iter, verbose=1)
 elif model_selector == 1:
-    model = SVC(kernel="linear", verbose=True)
+    model = LinearSVC(dual='auto', verbose=1)
 elif model_selector == 2:
     model = KNeighborsClassifier(n_neighbors=KNN_k_neighbors) # play around with k value
 elif model_selector == 3:

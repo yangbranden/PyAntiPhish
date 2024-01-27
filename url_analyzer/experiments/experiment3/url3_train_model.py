@@ -2,7 +2,7 @@
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
+from sklearn.svm import LinearSVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
@@ -63,7 +63,7 @@ for i in range(iterations):
     if model_selector == 0:
         model = LogisticRegression(max_iter=LR_max_iter)
     elif model_selector == 1:
-        model = SVC(kernel="linear")
+        model = LinearSVC(dual='auto')
     elif model_selector == 2:
         model = KNeighborsClassifier(n_neighbors=KNN_k_neighbors) # play around with k value
     elif model_selector == 3:
