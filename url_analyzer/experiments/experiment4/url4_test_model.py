@@ -30,13 +30,29 @@ from url_features.is_typosquatting import is_typosquatting
 def calculate_metrics():
     print("\n### EXPERIMENT 4 ###\n\n")
     data = pd.read_csv("url4_data.csv", encoding='latin-1')
-    features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-                "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-                "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-                "has_tls", "typosquatting"]])
-    labels = np.array(data["result"])
-    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
     for model_name in ["url4_model_LR.pickle", "url4_model_SVM.pickle", "url4_model_KNN.pickle", "url4_model_RF.pickle"]:
+        if model_name == "url3_model_LR.pickle": # Logistic Regression
+            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
+                    "has_tls", "typosquatting"]])
+        elif model_name == "url3_model_SVM.pickle": # Support Vector Machine
+            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
+                    "has_tls", "typosquatting"]])
+        elif model_name == "url3_model_KNN.pickle": # K-Nearest Neighbors
+            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
+                    "has_tls", "typosquatting"]])
+        elif model_name == "url3_model_RF.pickle": # Random Forest
+            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
+                    "has_tls", "typosquatting"]])
+        labels = np.array(data["result"])
+        x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
         saved_model = open(model_name, "rb")
         model = pickle.load(saved_model)
         predictions = model.predict(x_test)
