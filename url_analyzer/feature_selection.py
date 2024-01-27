@@ -17,11 +17,11 @@ y = data.iloc[:,-1]    # target column
 
 ### 1 - Univariate Selection (SelectKBest with chi-squared test) ###
 # apply SelectKBest class to rank features
-# bestfeatures = SelectKBest(score_func=chi2, k='all')
-# fit = bestfeatures.fit(X,y)
-# dfscores = pd.DataFrame(fit.scores_)
-# dfcolumns = pd.DataFrame(X.columns)
-# # concat two dataframes for better visualization 
-# featureScores = pd.concat([dfcolumns,dfscores],axis=1)
-# featureScores.columns = ['Features','Score']  # naming the dataframe columns
-# print(featureScores.nlargest(14,'Score'))
+bestfeatures = SelectKBest(score_func=chi2, k='all')
+fit = bestfeatures.fit(X,y)
+dfscores = pd.DataFrame(fit.scores_)
+dfcolumns = pd.DataFrame(X.columns)
+# concat two dataframes for better visualization 
+featureScores = pd.concat([dfcolumns,dfscores],axis=1)
+featureScores.columns = ['Features','Score']  # naming the dataframe columns
+print(featureScores.nlargest(14,'Score'))

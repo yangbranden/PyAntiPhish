@@ -28,7 +28,7 @@ from url_features.is_typosquatting import is_typosquatting
 
 # This function calculates all of the metrics that we want to see from our model, as well as displays a correlation matrix heatmap
 def calculate_metrics():
-    print("\n### EXPERIMENT # ###\n\n")
+    print("\n### EXPERIMENT 0 ###\n\n")
     data = pd.read_csv("url0_data.csv", encoding='latin-1')
     features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
                 "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 

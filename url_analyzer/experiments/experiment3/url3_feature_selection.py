@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SequentialFeatureSelector
 
-model_selector = 0
+model_selector = 1
 
 LR_max_iter = 3000
 KNN_k_neighbors = 7
@@ -25,7 +25,7 @@ if model_selector == 0:
     model = LogisticRegression(max_iter=LR_max_iter, verbose=1)
     column_title = "Selected by Forward-SFS (LR)"
 elif model_selector == 1:
-    model = SVC(kernel="linear", verbose=True)
+    model = SVC(kernel="linear", shrinking=False, verbose=True)
     column_title = "Selected by Forward-SFS (SVM)"
 elif model_selector == 2:
     model = KNeighborsClassifier(n_neighbors=KNN_k_neighbors) # play around with k value
