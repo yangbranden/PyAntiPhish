@@ -32,20 +32,14 @@ def calculate_metrics():
     data = pd.read_csv("url3_data.csv", encoding='latin-1')
     for model_name in ["url3_model_LR.pickle", "url3_model_SVM.pickle", "url3_model_KNN.pickle", "url3_model_RF.pickle"]:
         if model_name == "url3_model_LR.pickle": # Logistic Regression
-            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-                    "has_tls", "typosquatting"]])
+            features = np.array(data[["netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "percent_count", "atsign_count", "hashsign_count", "plus_count", 
+                "semicolon_count", "comma_count", "exclamation_count", "dollar_count", "has_bad_tld", "has_raw_ip", "typosquatting"]])
         elif model_name == "url3_model_SVM.pickle": # Support Vector Machine
-            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-                    "has_tls", "typosquatting"]])
+            features = np.array(data[["netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "percent_count", "question_count", "atsign_count", "hashsign_count", "plus_count", 
+                "comma_count", "exclamation_count", "dollar_count", "has_bad_tld", "has_raw_ip", "typosquatting"]])
         elif model_name == "url3_model_KNN.pickle": # K-Nearest Neighbors
-            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-                    "has_tls", "typosquatting"]])
+            features = np.array(data[["subdomain_len", "netloc_len_ratio", "pathcomp_len_ratio", "period_count", "dash_count", "atsign_count", "plus_count", 
+                "colon_count", "exclamation_count", "dollar_count", "has_bad_tld", "has_raw_ip", "has_tls", "typosquatting"]])
         elif model_name == "url3_model_RF.pickle": # Random Forest
             features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
                     "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
@@ -127,11 +121,27 @@ def predict_url(url, model_selector):
     has_tls = 1 if tls_status(url) else 0
     typosquatting = 1 if is_typosquatting(url) else 0
     
-    target_url_data = [[
-        url_length, subdomain_len, subdomain_len_ratio, netloc_len, netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, period_count, slash_count,
-        percent_count, dash_count, question_count, atsign_count, ampersand_count, hashsign_count, equal_count, underscore_count, plus_count, colon_count,
-        semicolon_count, comma_count, exclamation_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
-    ]]
+    if model_selector == 0: # Logistic Regression
+        target_url_data = [[
+            netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, percent_count, atsign_count, hashsign_count, plus_count, 
+            semicolon_count, comma_count, exclamation_count, dollar_count, has_bad_tld, has_raw_ip, typosquatting
+        ]]
+    elif model_selector == 1: # SVM
+        target_url_data = [[
+            netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, percent_count, question_count, atsign_count, hashsign_count, plus_count, 
+            comma_count, exclamation_count, dollar_count, has_bad_tld, has_raw_ip, typosquatting
+        ]]
+    elif model_selector == 2: # KNN
+        target_url_data = [[
+            subdomain_len, netloc_len_ratio, pathcomp_len_ratio, period_count, dash_count, atsign_count, plus_count, 
+            colon_count, exclamation_count, dollar_count, has_bad_tld, has_raw_ip, has_tls, typosquatting
+        ]]
+    elif model_selector == 3: # Random Forest
+        target_url_data = [[
+            url_length, subdomain_len, subdomain_len_ratio, netloc_len, netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, period_count, slash_count,
+            percent_count, dash_count, question_count, atsign_count, ampersand_count, hashsign_count, equal_count, underscore_count, plus_count, colon_count,
+            semicolon_count, comma_count, exclamation_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
+        ]]
     
     print(target_url_data)
     

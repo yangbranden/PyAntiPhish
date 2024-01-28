@@ -34,7 +34,7 @@ elif model_selector == 3:
     model = RandomForestClassifier(n_estimators=RF_n_estimators, verbose=1) # play around with number of trees
     column_title = "Selected by Forward-SFS (RF)"
 
-sel = SequentialFeatureSelector(model, n_features_to_select='auto', scoring='accuracy', direction='forward')
+sel = SequentialFeatureSelector(model, n_features_to_select='auto', scoring='accuracy', direction='forward') # playing around with tol value; no detailed documentation on its significance
 sel.fit(X,y)
 selected_features = sel.get_support()
 
