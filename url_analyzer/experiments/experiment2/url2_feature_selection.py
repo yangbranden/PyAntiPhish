@@ -26,6 +26,7 @@ display(df)
 # Matplotlib visualization
 fig, ax = plt.subplots()
 ax.axis('off')
+ax.set_title("Experiment 2 - Chi-Square Test", y=1.1, pad=10)
 colors = [['w' for cell in row] for row in df.values]
 for i in range(len(df.values)):
     if df.values[i][1] < 100.0:

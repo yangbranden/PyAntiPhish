@@ -54,8 +54,15 @@ def calculate_metrics():
         print("False Negative Rate:", fn / (fn + tp))
         
         cm = metrics.confusion_matrix(y_test, predictions)
-        disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
+        disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['benign', 'phishing'])
         disp.plot()
+        plt.title('Experiment 2 - Confusion Matrix of ' + model_name)
+        plt.xlabel('Predicted')
+        plt.ylabel('True')
+        plt.text(0, 0.4, 'True Negative', ha='center')
+        plt.text(1, 0.4, 'False Positive', ha='center', color='white')
+        plt.text(0, 1.4, 'False Negative', ha='center', color='white')
+        plt.text(1, 1.4, 'True Positive', ha='center')
         plt.show()
         print()
 

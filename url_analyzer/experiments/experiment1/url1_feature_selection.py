@@ -26,6 +26,7 @@ display(df)
 # Matplotlib visualization
 fig, ax = plt.subplots()
 ax.axis('off')
+ax.set_title("Experiment 1 - VarianceThreshold", y=1.1, pad=10)
 colors = [['#FF6961' if cell == False else 'w' for cell in row] for row in output]
 table = ax.table(cellText=output, cellColours=colors, loc='center', cellLoc='center', colLabels=None)
 table.auto_set_font_size(False)

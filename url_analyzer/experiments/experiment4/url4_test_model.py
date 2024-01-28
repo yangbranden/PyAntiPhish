@@ -67,6 +67,13 @@ def calculate_metrics():
         cm = metrics.confusion_matrix(y_test, predictions)
         disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
         disp.plot()
+        plt.title('Experiment 4 - Confusion Matrix of ' + model_name, display_labels=['benign', 'phishing'])
+        plt.xlabel('Predicted')
+        plt.ylabel('True')
+        plt.text(0, 0.4, 'True Negative', ha='center')
+        plt.text(1, 0.4, 'False Positive', ha='center', color='white')
+        plt.text(0, 1.4, 'False Negative', ha='center', color='white')
+        plt.text(1, 1.4, 'True Positive', ha='center')
         plt.show()
         print()
 

@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SequentialFeatureSelector
 
-model_selector = 3
+model_selector = 2
 
 LR_max_iter = 3000
 KNN_k_neighbors = 7
@@ -23,23 +23,23 @@ y = data.iloc[:,-1] # target column
 ### 3 - Forward-SequentialFeatureSelector for each model ###
 if model_selector == 0:
     model = LogisticRegression(max_iter=LR_max_iter, verbose=1)
-    column_title = "Selected by Forward-SFS (LR)"
+    title = "Experiment 3 - Forward-SFS for Logistic Regression"
 elif model_selector == 1:
     model = LinearSVC(dual='auto', verbose=1)
-    column_title = "Selected by Forward-SFS (SVM)"
+    title = "Experiment 3 - Forward-SFS for Support Vector Machine"
 elif model_selector == 2:
     model = KNeighborsClassifier(n_neighbors=KNN_k_neighbors) # play around with k value
-    column_title = "Selected by Forward-SFS (KNN)"
+    title = "Experiment 3 - Forward-SFS for K-Nearest Neighbors"
 elif model_selector == 3:
     model = RandomForestClassifier(n_estimators=RF_n_estimators, verbose=1) # play around with number of trees
-    column_title = "Selected by Forward-SFS (RF)"
+    title = "Experiment 3 - Forward-SFS for Random Forest"
 
 sel = SequentialFeatureSelector(model, n_features_to_select='auto', scoring='accuracy', direction='forward') # playing around with tol value; no detailed documentation on its significance
 sel.fit(X,y)
 selected_features = sel.get_support()
 
 # Create list to display in table
-output = [["Feature", column_title]]
+output = [["Feature", "Selected by Forward-SFS"]]
 for i in range(len(selected_features)):
     output.append([data.columns[i], selected_features[i]])
 
@@ -49,6 +49,7 @@ display(df)
 # Matplotlib visualization
 fig, ax = plt.subplots()
 ax.axis('off')
+ax.set_title(title, y=1.1, pad=10)
 colors = [['#FF6961' if cell == False else 'w' for cell in row] for row in output]
 table = ax.table(cellText=output, cellColours=colors, loc='center', cellLoc='center', colLabels=None)
 table.auto_set_font_size(False)
