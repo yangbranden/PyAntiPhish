@@ -41,10 +41,8 @@ def calculate_metrics():
             features = np.array(data[["subdomain_len", "subdomain_len_ratio", "pathcomp_len_ratio", "period_count", "question_count", "atsign_count", "plus_count", "colon_count", "comma_count",
                 "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls"]])
         elif model_name == "url3_model_RF.pickle": # Random Forest
-            features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
-                    "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
-                    "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
-                    "has_tls", "typosquatting"]])
+            features = np.array(data[["subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "period_count", "slash_count", "percent_count", "dash_count", "question_count", 
+                    "atsign_count", "equal_count", "colon_count", "tilde_count", "has_bad_tld", "has_tls"]])
         labels = np.array(data["result"])
         x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
         saved_model = open(model_name, "rb")
@@ -145,9 +143,8 @@ def predict_url(url, model_selector):
         ]]
     elif model_selector == 3: # Random Forest
         target_url_data = [[
-            url_length, subdomain_len, subdomain_len_ratio, netloc_len, netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, period_count, slash_count,
-            percent_count, dash_count, question_count, atsign_count, ampersand_count, hashsign_count, equal_count, underscore_count, plus_count, colon_count,
-            semicolon_count, comma_count, exclamation_count, tilde_count, dollar_count, has_bad_tld, has_bad_tld_location, has_raw_ip, has_tls, typosquatting
+            subdomain_len, subdomain_len_ratio, netloc_len, netloc_len_ratio, period_count, slash_count, percent_count, dash_count, question_count, 
+            atsign_count, equal_count, colon_count, tilde_count, has_bad_tld, has_tls
         ]]
     
     print(target_url_data)
