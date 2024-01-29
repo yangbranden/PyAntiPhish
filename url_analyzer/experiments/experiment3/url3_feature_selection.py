@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SequentialFeatureSelector
 
-model_selector = 0
+model_selector = 3
 
 LR_max_iter = 3000
 KNN_k_neighbors = 7
