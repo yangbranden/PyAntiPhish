@@ -13,7 +13,7 @@ import os
 
 # CONSTANTS
 iterations = 20
-model_selector = 0
+model_selector = 3
 
 LR_max_iter = 3000
 KNN_k_neighbors = 7
@@ -36,17 +36,21 @@ data = data.replace({False: 0, True: 1})
 
 # Define features (x) and labels (y)
 if model_selector == 0: # Logistic Regression
-    features = np.array(data[["url_length", "subdomain_len_ratio", "netloc_len_ratio", "pathcomp_len", "period_count", "slash_count", "percent_count", "dash_count", "question_count",
-            "equal_count", "underscore_count", "plus_count", "colon_count", "has_bad_tld", "has_tls"]])
+    features = np.array(data[["url_length", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+            "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+            "colon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_tls", "typosquatting"]])
 elif model_selector == 1: # Support Vector Machine
-    features = np.array(data[["subdomain_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count", "slash_count", "percent_count", "dash_count", "ampersand_count",
-            "hashsign_count", "equal_count", "underscore_count", "plus_count", "colon_count", "has_bad_tld", "has_tls"]])
+    features = np.array(data[["url_length", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+            "slash_count", "percent_count", "dash_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+            "colon_count", "comma_count", "exclamation_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_tls", "typosquatting"]])
 elif model_selector == 2: # K-Nearest Neighbors
-    features = np.array(data[["subdomain_len", "subdomain_len_ratio", "pathcomp_len_ratio", "period_count", "question_count", "atsign_count", "plus_count", "colon_count", "comma_count",
-            "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls"]])
+    features = np.array(data[["subdomain_len", "subdomain_len_ratio", "pathcomp_len_ratio", "period_count", "question_count", "atsign_count", "colon_count", "comma_count", 
+            "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting"]])
 elif model_selector == 3: # Random Forest
-    features = np.array(data[["subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "period_count", "slash_count", "percent_count", "dash_count", "question_count", 
-            "atsign_count", "equal_count", "colon_count", "tilde_count", "has_bad_tld", "has_tls"]])
+    features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len_ratio", "period_count",
+            "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+            "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
+            "has_tls", "typosquatting"]])
 labels = np.array(data["result"])
 # print(features)
 # print(labels)
@@ -94,9 +98,25 @@ for i in range(iterations):
     print(iter_update)
 
 ### PRINT ACC OF ALL MODELS ###
-print("\n### EXPERIMENT # ###\n\n")
-x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
+print("\n### EXPERIMENT 4 ###\n\n")
 for model_name in ["url4_model_LR.pickle", "url4_model_SVM.pickle", "url4_model_KNN.pickle", "url4_model_RF.pickle"]:
+    if model_name == "url4_model_LR.pickle": # Logistic Regression
+        features = np.array(data[["url_length", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+                "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+                "colon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_tls", "typosquatting"]])
+    elif model_name == "url4_model_SVM.pickle": # Support Vector Machine
+        features = np.array(data[["url_length", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "period_count",
+                "slash_count", "percent_count", "dash_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+                "colon_count", "comma_count", "exclamation_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_tls", "typosquatting"]])
+    elif model_name == "url4_model_KNN.pickle": # K-Nearest Neighbors
+        features = np.array(data[["subdomain_len", "subdomain_len_ratio", "pathcomp_len_ratio", "period_count", "question_count", "atsign_count", "colon_count", "comma_count", 
+                "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", "has_tls", "typosquatting"]])
+    elif model_name == "url4_model_RF.pickle": # Random Forest
+        features = np.array(data[["url_length", "subdomain_len", "subdomain_len_ratio", "netloc_len", "netloc_len_ratio", "pathcomp_len_ratio", "period_count",
+                "slash_count", "percent_count", "dash_count", "question_count", "atsign_count", "ampersand_count", "hashsign_count", "equal_count", "underscore_count", "plus_count", 
+                "colon_count", "semicolon_count", "comma_count", "exclamation_count", "tilde_count", "dollar_count", "has_bad_tld", "has_bad_tld_location", "has_raw_ip", 
+                "has_tls", "typosquatting"]])
+    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
     saved_model = open(model_name, "rb")
     model = pickle.load(saved_model)
     predictions = model.predict(x_test)

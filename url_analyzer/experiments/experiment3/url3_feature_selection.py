@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SequentialFeatureSelector
 
-model_selector = 2
+model_selector = 0
 
 LR_max_iter = 3000
 KNN_k_neighbors = 7
@@ -34,7 +34,7 @@ elif model_selector == 3:
     model = RandomForestClassifier(n_estimators=RF_n_estimators, verbose=1) # play around with number of trees
     title = "Experiment 3 - Forward-SFS for Random Forest"
 
-sel = SequentialFeatureSelector(model, n_features_to_select='auto', scoring='accuracy', direction='forward') # playing around with tol value; no detailed documentation on its significance
+sel = SequentialFeatureSelector(model, n_features_to_select='auto', scoring='accuracy', direction='forward', tol=0.0001) # playing around with tol value; no detailed documentation on its significance
 sel.fit(X,y)
 selected_features = sel.get_support()
 
