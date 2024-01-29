@@ -128,15 +128,15 @@ def predict_url(url, model_selector):
     
     if model_selector == 0: # Logistic Regression
         target_url_data = [[
-            "netloc_len_ratio", "pathcomp_len", "pathcomp_len_ratio", "percent_count", "atsign_count", "hashsign_count", "plus_count", "comma_count", "has_bad_tld"
+            netloc_len_ratio, pathcomp_len, pathcomp_len_ratio, percent_count, atsign_count, hashsign_count, plus_count, comma_count, has_bad_tld
         ]]
     elif model_selector == 1: # SVM
         target_url_data = [[
-            "netloc_len_ratio", "pathcomp_len", "percent_count", "atsign_count", "hashsign_count", "plus_count", "comma_count", "has_bad_tld"
+            netloc_len_ratio, pathcomp_len, percent_count, atsign_count, hashsign_count, plus_count, comma_count, has_bad_tld
         ]]
     elif model_selector == 2: # KNN
         target_url_data = [[
-            "subdomain_len", "pathcomp_len_ratio", "period_count", "dash_count", "atsign_count", "plus_count", "colon_count", "has_bad_tld", "has_tls"
+            subdomain_len, pathcomp_len_ratio, period_count, dash_count, atsign_count, plus_count, colon_count, has_bad_tld, has_tls
         ]]
     elif model_selector == 3: # Random Forest
         target_url_data = [[
