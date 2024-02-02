@@ -27,7 +27,7 @@ cd package
 zip -r ../package.zip .
 ```
 
-4. Download the `package.zip` file and then add in the code:
+4. Download the `package.zip` file and then add in the code (might want to delete `__pycache__` if exists in url_features/):
 ```
 zip -r package.zip url_features
 zip package.zip url_analyzer.py
