@@ -7,10 +7,6 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 import pickle
 
-# so that we can import our features
-import sys
-sys.path.append("../../")
-
 # Import feature extraction functions from url_features folder
 from url_features.url_len import get_url_len
 from url_features.subdomain_len import get_subdomain_len
