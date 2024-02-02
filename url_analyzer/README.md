@@ -29,9 +29,13 @@ zip -r ../package.zip .
 
 4. Download the `package.zip` file and then add in the code:
 ```
+zip -r package.zip url_features
 zip package.zip url_analyzer.py
 zip package.zip url_model_KNN.pickle
 zip package.zip url_model_LR.pickle
 zip package.zip url_model_RF.pickle
 zip package.zip url_model_SVM.pickle
 ```
+
+
+I have additionally included in this directory a blank package zip file (`blank_package.zip`) that contains only the Python dependencies required for this project. Simply complete step 4 and upload to AWS.
