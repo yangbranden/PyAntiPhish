@@ -10,3 +10,4 @@ package.zip
 do.py
 __pycache__
 *.pyc
+old/
