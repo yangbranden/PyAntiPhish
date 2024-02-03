@@ -2,17 +2,17 @@
 
 ## Uploading to AWS Lambda
 Making AWS Lambda package:
-1. Create an Amazon Linux EC2 instance (just using Cloud9 environment is probably the easiest, it will make an EC2 instance for you)
+1. Create an Amazon Linux 2 EC2 instance (just using Cloud9 environment is probably the easiest, it will make an EC2 instance for you). **Make sure it is correct runtime**: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
 And then install python 3.11 on the EC2/Cloud9 AL environment:
 ```
 sudo dnf install python3.11 -y
 sudo dnf install python3.11-pip -y
 ```
 
-2. Compile the required Python 3.11 modules on an Amazon Linux EC2 instance (copy the `requirements.txt` file)
+2. Compile the required Python 3.11 modules on an Amazon Linux EC2 instance (copy the `requirements.txt` file). **Make sure to use the correct pip version**; the AWS instance may already have another Python version installed
 ```
 mkdir package/
-pip install --target ./package -r requirements.txt
+pip3.11 install --target ./package -r requirements.txt
 ```
 
 3. Compress/remove unnecessary files from the modules so that the package zip is small enough for lambda

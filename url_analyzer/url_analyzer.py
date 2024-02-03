@@ -173,3 +173,5 @@ def lambda_handler(json_input, lambda_context):
     }
     
     return response
+
+print(lambda_handler({"url": "https://www.google.com/"}, 0))
