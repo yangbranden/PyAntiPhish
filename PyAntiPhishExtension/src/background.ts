@@ -31,14 +31,13 @@ async function urlAnalyzer(url?: string | undefined) {
     
         console.log("AWS Lambda returned:", data);
         
-        const body = data['body'];
-        const output = JSON.parse(body)['output'];
-        console.log("Parsed JSON:", output);
+        const body = JSON.parse(data['body']);
+        console.log("Parsed JSON:", body);
 
-        const model_LR_pred = output['model_LR']['prediction'];
-        const model_SVM_pred = output['model_SVM']['prediction'];
-        const model_KNN_pred = output['model_KNN']['prediction'];
-        const model_RF_pred = output['model_RF']['prediction'];
+        const model_LR_pred = body['model_LR']['prediction'];
+        const model_SVM_pred = body['model_SVM']['prediction'];
+        const model_KNN_pred = body['model_KNN']['prediction'];
+        const model_RF_pred = body['model_RF']['prediction'];
         console.log("model_LR:", model_LR_pred)
         console.log("model_SVM:", model_SVM_pred)
         console.log("model_KNN:", model_KNN_pred)
@@ -62,7 +61,7 @@ async function urlAnalyzer(url?: string | undefined) {
             window.location.href = chrome.runtime.getURL('./block.html');
         }
 
-        return output;
+        return body;
     } catch (e) {
         console.error(e);
     }
