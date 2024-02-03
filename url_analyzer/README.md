@@ -37,5 +37,9 @@ zip package.zip url_model_RF.pickle
 zip package.zip url_model_SVM.pickle
 ```
 
-
 I have additionally included in this directory a blank package zip file (`blank_package.zip`) that contains only the Python dependencies required for this project. Simply complete step 4 and upload to AWS.
+
+Test the API manually:
+```
+curl -X POST "[API url here]" -H "content-type: application/json" -d "{ \"url\": \"https://google.com\" }" 
+```
