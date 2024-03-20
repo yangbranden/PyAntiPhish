@@ -77,7 +77,7 @@ chrome.action.onClicked.addListener((tab) => {
 
 // Listener for URL analyzer
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.url && tab.url && !tab.url.startsWith('chrome-extension://') && !tab.url.startsWith('chrome://') && !whitelisted.includes(tab.url)) { // && tab.url?.includes(test)
+    if (changeInfo.url && tab.url && !tab.url.startsWith('chrome-extension://') && !tab.url.startsWith('chrome://') && !whitelisted.includes(tab.url)) { // && tab.url.includes(test)
         chrome.scripting.executeScript({
             target: {tabId: tab.id ?? -1},
             func: urlAnalyzer,
