@@ -1,10 +1,10 @@
 # PyAntiPhish
 
-This is the repository for my ASU Barrett Honors Thesis project, which I \*completed\* from Fall 2023 - Spring 2024.
+This is the repository for my ASU Barrett Honors Thesis project, which I completed\* from Fall 2023 - Spring 2024.
 
 If you would like the full breakdown of my project in report form, you can find it here: [to be added]
 
-There is still lots of room for future improvement, but the idea behind this project is a Chromium-based browser extension that aims to block phishing websites using Machine Learning classifiers (specifically a select few from `scikit-learn`). Although it does technically work, it is a bit scuffed (but hey, I tried my best, and that's what matters right...?)
+\*There is still lots of room for future improvement, but the idea behind this project is a Chromium-based browser extension that aims to block phishing websites using Machine Learning classifiers (specifically a select few from `scikit-learn`). Although it does technically work, it is a bit scuffed (but hey, I tried my best, and that's what matters right...?)
 
 The classifiers that I trained and tested out are:
 - Logistic Regression
@@ -23,7 +23,7 @@ So if you want to try out the extension locally, you need to do a couple of thin
 
 Now if you navigate to any website, it should be properly blocking a ton of stuff that it probably shouldn't be because I suck at machine learning! I'm gonna take some grad-level classes on ML and figure out how to properly do this stuff hopefully lol. Then I'll come back and fix this project (or I won't because I'll be doing cooler stuff hehe).
 
-### URL datasets
+## URL datasets
 These are the URL datasets that I used for training the sklearn models in this project:
 ```
 https://www.kaggle.com/datasets/samahsadiq/benign-and-malicious-urls
@@ -32,7 +32,7 @@ https://www.kaggle.com/datasets/sid321axn/malicious-urls-dataset
 https://phishtank.org/developer_info.php
 ```
 
-### Collecting HTML DOM data
+## Collecting HTML DOM data
 So one thing that I was planning on doing was collecting HTML content data, but turns out it's kinda scuffed also because I run Windows natively and Defender doesn't like me downloading tons of malicious .html files, so it just automatically deletes them (and I'm not comfortable disabling my antivirus lol). So basically I used a VirtualBox VM to try and collect data, but turns out that it's also not that easy because ASU internet blocks a lot of phishing pages (I actually work in the SOC so I know for a fact they block URLs), so I also had to get a VPN.
 
 After that, I did this on my VM:
