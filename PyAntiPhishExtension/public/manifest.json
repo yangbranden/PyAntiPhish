@@ -3,11 +3,14 @@
    "description": "Branden Yang Barrett Thesis Project",
    "version": "1.0",
    "manifest_version": 3,
-   "action": {},
+   "action": {
+      "default_popup": "popup.html"
+   },
    "permissions": [
       "activeTab",
       "scripting",
-      "tabs"
+      "tabs",
+      "storage"
    ],
    "host_permissions": [
       "*://*/*",

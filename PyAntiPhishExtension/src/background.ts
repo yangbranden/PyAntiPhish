@@ -35,14 +35,30 @@ async function urlAnalyzer(url?: string | undefined) {
         console.log("model_SVM:", model_SVM_pred)
         console.log("model_KNN:", model_KNN_pred)
         console.log("model_RF:", model_RF_pred)
+        chrome.storage.sync.set({model_LR_pred: model_LR_pred});
+        chrome.storage.sync.set({model_SVM_pred: model_SVM_pred});
+        chrome.storage.sync.set({model_KNN_pred: model_KNN_pred});
+        chrome.storage.sync.set({model_RF_pred: model_RF_pred});
 
-        // Can swap out which model to use here:
+        // Can select which model to use here:
         // if (model_LR_pred === 'phishing') {
         // if (model_SVM_pred === 'phishing') {
         // if (model_KNN_pred === 'phishing') {
         if (model_RF_pred === 'phishing') {
+            chrome.storage.sync.set({url: url});
             window.location.href = chrome.runtime.getURL('./block.html');
         }
+
+        // OR you can use this "count" system, which is kinda like VT? but not really...? yeah not really.
+        // var count = 0;
+        // if (model_LR_pred === 'phishing') count += 1;
+        // if (model_SVM_pred === 'phishing') count += 1;
+        // if (model_KNN_pred === 'phishing') count += 1;
+        // if (model_RF_pred === 'phishing') count += 1;
+        // if (count >= 3) {
+        //     chrome.storage.sync.set({url: url});
+        //     window.location.href = chrome.runtime.getURL('./block.html');
+        // }
         return body;
     } catch (e) {
         console.error(e);

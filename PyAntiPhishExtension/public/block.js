@@ -1,4 +1,4 @@
-let url = "https://twitter.com/"
+var url = "..."
 
 function goBack() {
     console.log("Clicked goBack");
@@ -27,6 +27,16 @@ function initPage() {
     let seeReportButton = document.getElementById("seeReport");
     let proceedButton = document.getElementById("proceedButton");
     let detailsText = document.getElementById("detailsText");
+    chrome.storage.sync.get(null, function(data) {
+        if (chrome.runtime.lastError) {
+            console.error("Error retrieving data: " + chrome.runtime.lastError.message);
+        } else {
+            // Update URL
+            console.log("Contents of Chrome Storage:", data);
+            url = data.url;
+            detailsText.innerHTML = "<a href=\"#\">" + url + "</a> was classified as phishing. Click the below \"See full report\" button to see why, or if you are sure that the site is not malicious, you may proceed with caution.";
+        }
+    });
     
     goBackButton.addEventListener("click", goBack);
     seeDetailsButton.addEventListener("click", seeDetails);
