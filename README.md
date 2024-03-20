@@ -1,10 +1,10 @@
 # PyAntiPhish
 
-This is the repository for my ASU Barrett Honors Thesis project, which I completed\* from Fall 2023 - Spring 2024.
+This is the repository for my ASU Barrett Honors Thesis project, which I "completed" from Fall 2023 - Spring 2024.
 
 If you would like the full breakdown of my project in report form, you can find it here: [to be added]
 
-\*There is still lots of room for future improvement, but the idea behind this project is a Chromium-based browser extension that aims to block phishing websites using Machine Learning classifiers (specifically a select few from `scikit-learn`). Although it does technically work, it is a bit scuffed (but hey, I tried my best, and that's what matters right...?)
+There is still lots of room for future improvement, but the idea behind this project is a Chromium-based browser extension that aims to block phishing websites using Machine Learning classifiers (specifically a select few from `scikit-learn`). Although it does technically work, it is a bit scuffed (but hey, I tried my best, and that's what matters right...?)
 
 The classifiers that I trained and tested out are:
 - Logistic Regression
